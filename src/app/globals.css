@@ -1,0 +1,127 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------------- */
+/* Design tokens — see /docs/portfolio-plan.md §4 for the rationale.       */
+/* Dark is the default brand theme; light is a fully supported variant.    */
+/* ---------------------------------------------------------------------- */
+
+:root {
+  --bg: #0a0a0b;
+  --bg-raised: #131316;
+  --bg-raised-2: #19191d;
+  --border: #232327;
+  --border-strong: #313136;
+  --fg: #f3f1ec;
+  --fg-muted: #9c9a97;
+  --fg-faint: #8f8c86;
+  --accent: #ff6b3d;
+  --accent-fg: #0a0a0b;
+  --accent-soft: rgba(255, 107, 61, 0.12);
+  --accent-cyan: #6bd6e8;
+  --accent-violet: #b79bff;
+  --accent-amber: #ffc15e;
+
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+
+  color-scheme: dark;
+}
+
+:root[data-theme="light"] {
+  --bg: #faf9f6;
+  --bg-raised: #ffffff;
+  --bg-raised-2: #f2f0ea;
+  --border: #e6e3dd;
+  --border-strong: #d5d1c8;
+  --fg: #15140f;
+  --fg-muted: #5c5a56;
+  --fg-faint: #6f6c66;
+  --accent: #c73f1a;
+  --accent-fg: #faf9f6;
+  --accent-soft: rgba(199, 63, 26, 0.1);
+  --accent-cyan: #0f8fa3;
+  --accent-violet: #6a4fd6;
+  --accent-amber: #b5760a;
+
+  color-scheme: light;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-raised: var(--bg-raised);
+  --color-bg-raised-2: var(--bg-raised-2);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-fg: var(--fg);
+  --color-fg-muted: var(--fg-muted);
+  --color-fg-faint: var(--fg-faint);
+  --color-accent: var(--accent);
+  --color-accent-fg: var(--accent-fg);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-cyan: var(--accent-cyan);
+  --color-accent-violet: var(--accent-violet);
+  --color-accent-amber: var(--accent-amber);
+
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Fraunces Variable", ui-serif, Georgia, serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+}
+
+* {
+  border-color: var(--color-border);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-fg);
+  font-family: var(--font-sans);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Focus ring — always visible, never suppressed. */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+::selection {
+  background: var(--color-accent);
+  color: var(--color-accent-fg);
+}
+
+/* Subtle dot-grid used behind the hero / section breaks instead of photography. */
+.bg-dot-grid {
+  background-image: radial-gradient(circle, var(--color-border-strong) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+.font-feature-tabular {
+  font-variant-numeric: tabular-nums;
+}
