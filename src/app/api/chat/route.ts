@@ -67,7 +67,14 @@ export async function POST(request: Request) {
       body: JSON.stringify({
         model: MODEL,
         messages: [
-          { role: "system", content: buildSystemPrompt() },
+          // Recent turns join the question for project selection: a follow-up
+          // like "what stack did it use?" carries no project terms of its own.
+          {
+            role: "system",
+            content: buildSystemPrompt(
+              [...history.slice(-2).map((t) => t.text), message].join(" "),
+            ),
+          },
           ...history.map((t) => ({
             role: t.role === "model" ? "assistant" : "user",
             content: t.text,
