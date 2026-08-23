@@ -1,16 +1,19 @@
 import { NextResponse } from "next/server";
 import { buildSystemPrompt } from "@/lib/chat-context";
 
-// Google retires these on a schedule. A dead model returns 404 naming its
-// replacement, which is the quickest way to find the new string.
-const MODEL = "gemini-3.6-flash";
+// Groq, not Gemini: the Gemini free tier allows 20 requests/day, which a
+// public portfolio exhausts before lunch. Groq's is 14,400/day, and its API
+// is OpenAI-compatible.
+// Groq rotates these; a retired id returns 404 `model_not_found`. Check what
+// is actually served with GET https://api.groq.com/openai/v1/models.
+const MODEL = "openai/gpt-oss-120b";
 const MAX_MESSAGE_CHARS = 500;
 const MAX_HISTORY_TURNS = 10;
 
 type Turn = { role: "user" | "model"; text: string };
 
 export async function POST(request: Request) {
-  const apiKey = process.env.GEMINI_API_KEY;
+  const apiKey = process.env.GROQ_API_KEY;
   if (!apiKey) {
     return NextResponse.json(
       { error: "Chat is not configured on this deployment." },
@@ -52,34 +55,32 @@ export async function POST(request: Request) {
 
   let response: Response;
   try {
-    response = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`,
-    {
+    response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
       // Without this a stalled upstream call leaves the widget on
       // "Thinking…" forever, which reads as a hard freeze.
       signal: AbortSignal.timeout(25_000),
-      headers: { "content-type": "application/json", "x-goog-api-key": apiKey },
+      headers: {
+        "content-type": "application/json",
+        authorization: `Bearer ${apiKey}`,
+      },
       body: JSON.stringify({
-        systemInstruction: { parts: [{ text: buildSystemPrompt() }] },
-        contents: [
-          ...history.map((t) => ({ role: t.role, parts: [{ text: t.text }] })),
-          { role: "user", parts: [{ text: message }] },
+        model: MODEL,
+        messages: [
+          { role: "system", content: buildSystemPrompt() },
+          ...history.map((t) => ({
+            role: t.role === "model" ? "assistant" : "user",
+            content: t.text,
+          })),
+          { role: "user", content: message },
         ],
-        generationConfig: {
-          // Heavy reasoning is dead weight for "what did he build at X" — it
-          // drove replies to 15-30s and ate the output budget. Gemini 3 spells
-          // this `thinkingLevel`; the older `thinkingBudget` is a 400 here.
-          thinkingConfig: { thinkingLevel: "low" },
-          maxOutputTokens: 900,
-          temperature: 0.4,
-        },
+        max_tokens: 900,
+        temperature: 0.4,
       }),
-    },
-    );
+    });
   } catch (e) {
     const timedOut = e instanceof DOMException && e.name === "TimeoutError";
-    console.error("Gemini request failed", e);
+    console.error("Groq request failed", e);
     return NextResponse.json(
       {
         error: timedOut
@@ -91,12 +92,10 @@ export async function POST(request: Request) {
   }
 
   if (!response.ok) {
-    console.error("Gemini request failed", response.status, await response.text());
-    // The free tier allows only 20 requests/day, so 429 is a routine state
-    // here, not an edge case — say so plainly instead of looking broken.
+    console.error("Groq request failed", response.status, await response.text());
     if (response.status === 429) {
       return NextResponse.json(
-        { error: "The chat has hit today's usage limit. Please try again tomorrow." },
+        { error: "The chat is busy right now — please try again in a moment." },
         { status: 429 },
       );
     }
@@ -107,10 +106,10 @@ export async function POST(request: Request) {
   }
 
   const data = await response.json();
-  const reply = data?.candidates?.[0]?.content?.parts
-    ?.map((p: { text?: string }) => p.text ?? "")
-    .join("")
-    .trim();
+  const reply =
+    typeof data?.choices?.[0]?.message?.content === "string"
+      ? data.choices[0].message.content.trim()
+      : "";
 
   if (!reply) {
     return NextResponse.json(
