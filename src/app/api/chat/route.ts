@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
 import { buildSystemPrompt } from "@/lib/chat-context";
 
-const MODEL = "gemini-2.0-flash";
+// Google retires these on a schedule. A dead model returns 404 naming its
+// replacement, which is the quickest way to find the new string.
+const MODEL = "gemini-3.6-flash";
 const MAX_MESSAGE_CHARS = 500;
 const MAX_HISTORY_TURNS = 10;
 
@@ -59,7 +61,9 @@ export async function POST(request: Request) {
           ...history.map((t) => ({ role: t.role, parts: [{ text: t.text }] })),
           { role: "user", parts: [{ text: message }] },
         ],
-        generationConfig: { maxOutputTokens: 400, temperature: 0.4 },
+        // 400 truncated answers mid-sentence: this model counts reasoning
+        // tokens against the budget. Still capped to bound quota per request.
+        generationConfig: { maxOutputTokens: 900, temperature: 0.4 },
       }),
     },
   );
