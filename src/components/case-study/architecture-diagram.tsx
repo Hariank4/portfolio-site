@@ -9,7 +9,7 @@ export function ArchitectureDiagram({ steps }: { steps: ArchitectureStep[] }) {
       {steps.map((step, i) => (
         <li key={step.label} className="flex items-stretch md:flex-1 md:min-w-[180px]">
           <div className="flex w-full flex-col gap-1.5 rounded-lg border border-border bg-bg-raised p-4">
-            <span className="font-mono text-[11px] uppercase tracking-wide text-accent">
+            <span className="text-[11px] uppercase tracking-wide text-accent">
               {String(i + 1).padStart(2, "0")}
             </span>
             <span className="font-display text-base font-medium">{step.label}</span>

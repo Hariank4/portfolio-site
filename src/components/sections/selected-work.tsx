@@ -26,7 +26,7 @@ export function SelectedWork() {
         </div>
 
         <div className="mt-20 border-t border-border pt-14">
-          <h3 className="font-mono text-xs uppercase tracking-[0.2em] text-fg-muted">
+          <h3 className="text-xs uppercase tracking-[0.2em] text-fg-muted">
             Also building
           </h3>
           <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2">

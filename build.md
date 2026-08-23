@@ -3,8 +3,23 @@
 ## Requirements
 
 - Node.js 20+ (built and tested on Node 22).
-- No environment variables. No database, no external API keys — the site is fully static (see
-  `architecture.md` §3).
+- No database. One optional environment variable, `GEMINI_API_KEY`, used only by the chat widget
+  (see "Optional: the chat widget" below). Everything else is static (`architecture.md` §3) and
+  builds and runs with no configuration at all.
+
+## Optional: the chat widget
+
+The "Ask about Hariank" widget calls `/api/chat`, which proxies to the Gemini API. It is the only
+part of the site that needs configuration, and the only non-static route.
+
+- Get a free key at https://aistudio.google.com/apikey.
+- Locally: copy `.env.local.example` to `.env.local` and fill in `GEMINI_API_KEY`.
+- On Vercel: add `GEMINI_API_KEY` under the project's Environment Variables.
+
+Without a key the site builds and runs normally — the widget just returns a "chat is not
+configured" message instead of answering. The model is pinned in `src/app/api/chat/route.ts`;
+Google renames free-tier models periodically, so that constant is the one thing to check if the
+endpoint starts 502-ing.
 
 ## Local development
 

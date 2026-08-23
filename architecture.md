@@ -14,8 +14,10 @@ works today").
 - **lucide-react** — icons.
 - `clsx` + `tailwind-merge` → `src/lib/cn.ts`'s `cn()` helper, used everywhere instead of raw
   string concatenation for conditional classes.
-- No CMS, no database, no server-side data fetching, no analytics SDK. Every route is statically
-  generated at build time (see §3).
+- No CMS, no database, no analytics SDK. Every route is statically generated at build time
+  (see §3) **except** `/api/chat`, the one dynamic route backing the chat widget — it is the
+  single deliberate exception to "no server-side work" and the only thing needing an env var
+  (`GEMINI_API_KEY`). See §10.
 
 ## 2. Directory layout
 
@@ -35,14 +37,14 @@ src/
   components/
     layout/    SiteHeader, MobileNav, SiteFooter, ThemeToggle, nav-links.ts
     ui/        Container, Eyebrow, SectionHeading, Button, Tag, StatusBadge, RevealOnScroll,
-               RevealGroup, RevealText, Magnetic, ProjectCover, FeaturedProjectCard, BuildCard,
+               RevealText, Magnetic, ProjectCover, FeaturedProjectCard, BuildCard,
                TimelineRow
     sections/  Hero, About, SelectedWork, Skills, Experience, Creative, OpenSource, Contact
                (one per numbered section on the home page, in render order)
     case-study/ CaseStudyHero, CaseStudySection, ArchitectureDiagram, SpecList, ChallengeList
   content/     profile.ts, projects.ts, experience.ts, skills.ts, creative.ts — see schema.md
   lib/         cn.ts (class merge helper), motion.ts (shared Framer Motion variants),
-               constants.ts (SITE_URL, SITE_NAME)
+               constants.ts (SITE_URL)
 ```
 
 Import alias: `@/*` → `./src/*` (see `tsconfig.json`).
@@ -69,7 +71,7 @@ Almost everything is a server component by default. `"use client"` is used only 
 or browser APIs are required:
 - `ThemeToggle` (reads/writes `document.documentElement`, uses `useSyncExternalStore`)
 - `MobileNav` (open/close state, focus trap, portal)
-- `Hero`, `RevealOnScroll`/`RevealGroup`/`RevealText`, `Magnetic`, `template.tsx` (all Framer
+- `Hero`, `RevealOnScroll`/`RevealText`, `Magnetic`, `template.tsx` (all Framer
   Motion — `useReducedMotion`, `whileInView`, animated props)
 
 ## 5. Fonts — self-hosted, not next/font/google
@@ -83,11 +85,15 @@ approach was replaced** with fully self-hosted packages:
   `next/font/local` pointed at bundled woff2 files — same `.variable` API as `next/font/google`,
   zero network dependency at build or request time.
 - `@fontsource-variable/fraunces` → imported directly for its CSS
-  (`@fontsource-variable/fraunces/full.css` and `full-italic.css` in `layout.tsx`), which defines
+  (`@fontsource-variable/fraunces/wght.css` and `wght-italic.css` in `layout.tsx`), which defines
   `@font-face { font-family: 'Fraunces Variable'; ... }` against local woff2 files. Referenced in
   `globals.css` as `--font-display: "Fraunces Variable", ui-serif, Georgia, serif;` — a plain
   string, not a CSS-variable indirection, since Fontsource doesn't hand back a `.variable` class
   the way `geist`/`next/font` do.
+
+  **Use the `wght` build, not `full`.** Fraunces ships optical-size, SOFT and WONK axes this site
+  never varies; `full.css` costs ~268KB for the latin subsets versus ~84KB for `wght`. Same family
+  name, identical rendering here. Don't "upgrade" these imports back to `full`.
 
 This is a strict improvement over the original plan, not a compromise: no runtime or build-time
 dependency on Google's infrastructure at all, which is both faster and more resilient to deploy in
@@ -116,11 +122,18 @@ All color/spacing/font tokens live in `src/app/globals.css`:
 
 ## 7. Motion architecture
 
-`src/lib/motion.ts` defines shared Framer Motion variants (`revealUp`, `staggerContainer`,
-`fadeIn`, `wordReveal`). `src/components/ui/reveal.tsx` wraps them into three reusable primitives:
-- `RevealOnScroll` — opacity/translate-in `whileInView`, `once: true`.
-- `RevealGroup` — stagger container (currently unused directly by any section, kept for future use;
-  sections instead pass manual per-item `delay` to `RevealOnScroll` — see `about.tsx`).
+**Import `m`, never `motion`.** `components/motion-provider.tsx` mounts `LazyMotion` with the
+`domAnimation` feature set in the root layout, so every animated component uses `m.div` / `m.p`
+rather than `motion.div`. Importing `motion` anywhere pulls the full feature bundle back in and
+silently undoes the saving (~9KB gzipped) — the code still works, which is what makes it easy to
+regress. `domAnimation` covers animate, variants, `whileInView` and hover/tap/focus; it excludes
+drag and layout animations, neither of which this site uses. Needing one of those means switching
+to `domMax`, not reaching for `motion`.
+
+`src/lib/motion.ts` defines the shared `revealUp` Framer Motion variant.
+`src/components/ui/reveal.tsx` wraps it into two reusable primitives:
+- `RevealOnScroll` — opacity/translate-in `whileInView`, `once: true`. Sections pass a manual
+  per-item `delay` to stagger a group — see `about.tsx`.
 - `RevealText` — splits a string into words, reveals each with a clipped rise. Used for the hero
   headline. Its reduced-motion fallback still applies `wordClassName` (e.g. the italic tagline
   styling) so accessibility doesn't cost visual fidelity — see the comment in `reveal.tsx`.
@@ -157,7 +170,39 @@ or reintroduce the clipping bug.
   keep in sync with copy changes.
 - `sitemap.ts` / `robots.ts` are Next.js metadata-route conventions, not static files.
 
-## 10. Performance
+## 10. Visual styles & the chat widget
+
+**Visual styles.** A `data-style` attribute on `<html>` selects `sharp` (default), `fluid`, or
+`minimal`. Same mechanism as theming (§6): CSS-variable blocks in `globals.css`, persisted to
+`localStorage("visualStyle")`, set pre-hydration by the inline script in `layout.tsx`.
+`ThemeToggle` and `VisualStyleToggle` share `lib/use-persisted-attribute.ts`.
+
+**Style and theme are orthogonal, and must stay that way.** `data-theme` owns the ground colour;
+`data-style` owns type, surface treatment and density. So a `[data-style]` block may never
+hard-code a colour — every surface it sets is `color-mix`ed from `--bg`/`--fg`, which is why all
+three styles read correctly in both themes. `minimal` in particular is a *density* change, not a
+light mode: it flattens `--bg-raised` onto `--bg` and derives hairline borders from the current
+foreground. A style that hard-codes, say, a light background would fight the theme toggle and
+produce unreadable combinations.
+
+Each style moves several levers together (that is what makes it read as a different design rather
+than a reskin): `--h1-size`, `--h1-leading`, `--display-weight`, `--display-tracking`,
+`--eyebrow-transform`, `--eyebrow-tracking`, the radius scale, and the border/raised-surface
+tokens. Two small semantic classes carry them — `.font-display` and `.eyebrow` — so components
+opt in by class instead of every style needing per-component overrides.
+
+Decoration is switched with `display`, never opacity — see §11 for why that distinction is
+load-bearing for performance.
+
+**Chat widget.** `/api/chat` (a Route Handler, Node runtime) proxies to the Gemini API. The
+system prompt is built by `lib/chat-context.ts` from the `src/content/` files verbatim — the whole
+corpus is a few KB, so there is no embedding/retrieval step; retrieval would be pure overhead at
+this size. The prompt instructs the model to answer only from those facts, which is the same
+never-invent-anything rule that governs the site's copy (`project.md`).
+`components/chat/chat-widget.tsx` portals its panel to `document.body` for exactly the reason §8
+describes — do not un-portal it.
+
+## 11. Performance
 
 - Every route is fully static (see §3) — no data-fetching waterfalls, no client-side loading
   states for content.
@@ -165,3 +210,24 @@ or reintroduce the clipping bug.
 - No image optimization pipeline needed because there are no raster images in the design (§ of
   `portfolio-plan.md` explains why — no photography was supplied, so the visual system is
   typography/diagram-led by design, not as a stopgap).
+
+**Fonts dominate the payload.** With no images and a small JS bundle, the woff2 files are ~98% of
+the bytes on a cold load. That makes font choices the highest-leverage perf decisions here — see
+the `wght` note in §5. Measured on `/`: ~218KB fonts vs ~5KB other resources.
+
+**Decoration must cost nothing when it is invisible.** Three rules the §10 features follow, each
+of which was a real measured regression before it was fixed:
+
+- The fluid blob uses `display: none` when inactive, not `opacity: 0`. At zero opacity its 80px
+  blur and infinite animation still ran in all three styles — continuous compositing for something
+  invisible in two of them.
+- The grain overlay has no `mix-blend-mode`. It is fixed and full-viewport, so a blend mode forces
+  the whole viewport to re-composite every scroll frame; at ~4% opacity the visual difference is
+  imperceptible.
+- The hero cursor-glow is a fixed-size element moved with `transform` and coalesced into one
+  `requestAnimationFrame`. Driving a gradient's position through CSS variables on every mousemove
+  repaints a full-viewport layer per event instead.
+
+**Keep content files out of client components.** `chat-widget.tsx` takes its copy as props from the
+root layout rather than importing `src/content/`. As a client component it would otherwise ship
+every case study's prose to every page — this was ~40KB of dead weight before it was caught.

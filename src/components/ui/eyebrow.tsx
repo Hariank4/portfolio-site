@@ -12,7 +12,7 @@ export function Eyebrow({
   return (
     <div
       className={cn(
-        "flex items-center gap-3 font-mono text-xs uppercase tracking-[0.2em] text-fg-muted",
+        "eyebrow flex items-center gap-3 text-xs text-fg-muted",
         className,
       )}
     >

@@ -18,7 +18,7 @@ export function SiteFooter() {
 
         <div className="grid grid-cols-2 gap-10 sm:grid-cols-3">
           <div className="flex flex-col gap-3">
-            <span className="font-mono text-xs uppercase tracking-wide text-fg-faint">Site</span>
+            <span className="text-xs uppercase tracking-wide text-fg-faint">Site</span>
             {navLinks.map((link) => (
               <a key={link.href} href={link.href} className="text-sm text-fg-muted hover:text-fg">
                 {link.label}
@@ -26,7 +26,7 @@ export function SiteFooter() {
             ))}
           </div>
           <div className="flex flex-col gap-3">
-            <span className="font-mono text-xs uppercase tracking-wide text-fg-faint">Elsewhere</span>
+            <span className="text-xs uppercase tracking-wide text-fg-faint">Elsewhere</span>
             {profile.socials.map((s) => (
               <a
                 key={s.label}

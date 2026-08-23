@@ -16,7 +16,7 @@ export function Skills() {
         <div className="mt-14 grid grid-cols-1 gap-x-10 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
           {skillGroups.map((group, i) => (
             <RevealOnScroll key={group.title} delay={i * 0.06}>
-              <h3 className="font-mono text-xs uppercase tracking-wide text-fg-faint">
+              <h3 className="text-xs uppercase tracking-wide text-fg-faint">
                 {group.title}
               </h3>
               <ul className="mt-4 flex flex-col gap-2.5">

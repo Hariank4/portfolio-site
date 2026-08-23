@@ -48,12 +48,12 @@ export function ProjectCover({ project, className }: { project: Project; classNa
       <div className="relative flex h-full flex-col justify-between p-6 md:p-8">
         <div className="flex items-center justify-between">
           <span
-            className="font-mono text-[11px] uppercase tracking-[0.2em]"
+            className="text-[11px] uppercase tracking-[0.2em]"
             style={{ color: "var(--cover-accent)" }}
           >
             {project.status}
           </span>
-          <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-fg-faint">
+          <span className="text-[11px] uppercase tracking-[0.2em] text-fg-faint">
             {project.timeframe.split("·")[0].trim()}
           </span>
         </div>

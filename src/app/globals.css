@@ -21,7 +21,6 @@
   --accent-violet: #b79bff;
   --accent-amber: #ffc15e;
 
-  --radius-sm: 6px;
   --radius-md: 12px;
   --radius-lg: 20px;
 
@@ -47,6 +46,68 @@
   color-scheme: light;
 }
 
+/* ---------------------------------------------------------------------- */
+/* Visual styles — ORTHOGONAL to light/dark. A style may never hard-code a  */
+/* colour: every surface below is mixed from --bg/--fg, so all three read   */
+/* correctly in either theme. `sharp` is the default and is expressed by     */
+/* the base :root values, so it needs no block of its own.                   */
+/* ---------------------------------------------------------------------- */
+
+/* Display type — the biggest single lever on how a style feels. */
+:root {
+  --h1-size: clamp(2.6rem, 7vw, 5.6rem);
+  --h1-leading: 1.02;
+  --display-weight: 500;
+  --display-tracking: -0.025em;
+  --eyebrow-transform: uppercase;
+  --eyebrow-tracking: 0.25em;
+}
+
+/* Fluid — atmospheric. Borders dissolve into translucent surfaces, type goes
+   larger and lighter, corners open right up. */
+:root[data-style="fluid"] {
+  --radius-md: 20px;
+  --radius-lg: 32px;
+
+  --border: color-mix(in srgb, var(--fg) 9%, transparent);
+  --border-strong: color-mix(in srgb, var(--fg) 16%, transparent);
+  --bg-raised: color-mix(in srgb, var(--fg) 5%, var(--bg));
+  --bg-raised-2: color-mix(in srgb, var(--fg) 9%, var(--bg));
+
+  --h1-size: clamp(2.8rem, 7.6vw, 6rem);
+  --h1-leading: 1.06;
+  --display-weight: 400;
+  --display-tracking: -0.03em;
+  --eyebrow-transform: lowercase;
+  --eyebrow-tracking: 0.14em;
+}
+
+/* Minimal — text-led. Flat surfaces, hairline rules, smaller and airier type.
+   Deliberately palette-neutral so it is a *density* change, not a theme
+   change: the dark/light toggle still owns the ground colour. */
+:root[data-style="minimal"] {
+  --border: color-mix(in srgb, var(--fg) 12%, var(--bg));
+  --border-strong: color-mix(in srgb, var(--fg) 22%, var(--bg));
+  --bg-raised: var(--bg);
+  --bg-raised-2: color-mix(in srgb, var(--fg) 4%, var(--bg));
+
+  --h1-size: clamp(2.2rem, 5vw, 4rem);
+  --h1-leading: 1.18;
+  --display-weight: 400;
+  --display-tracking: -0.02em;
+  --eyebrow-tracking: 0.3em;
+}
+
+.font-display {
+  font-weight: var(--display-weight);
+  letter-spacing: var(--display-tracking);
+}
+
+.eyebrow {
+  text-transform: var(--eyebrow-transform);
+  letter-spacing: var(--eyebrow-tracking);
+}
+
 @theme inline {
   --color-bg: var(--bg);
   --color-bg-raised: var(--bg-raised);
@@ -65,9 +126,7 @@
 
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   --font-display: "Fraunces Variable", ui-serif, Georgia, serif;
-  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 
-  --radius-sm: var(--radius-sm);
   --radius-md: var(--radius-md);
   --radius-lg: var(--radius-lg);
 }
@@ -112,16 +171,91 @@ body {
   color: var(--color-accent-fg);
 }
 
+/* Route-change transition — see app/template.tsx. */
+@keyframes route-enter {
+  from {
+    transform: translate3d(0, 8px, 0);
+  }
+}
+
+.route-enter {
+  animation: route-enter 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
 /* Subtle dot-grid used behind the hero / section breaks instead of photography. */
 .bg-dot-grid {
   background-image: radial-gradient(circle, var(--color-border-strong) 1px, transparent 1px);
   background-size: 28px 28px;
 }
 
+:root[data-style="minimal"] .bg-dot-grid {
+  display: none;
+}
+
+/* Full-viewport film grain. No blend mode: at 3.5% opacity `overlay` is
+   visually indistinguishable from normal compositing but forces the whole
+   viewport to re-blend on every scroll frame. */
+.grain-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.045;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+:root[data-style="minimal"] .grain-overlay {
+  display: none;
+}
+
+/* Decorative blurred gradient. `display: none` rather than `opacity: 0` when
+   inactive: an 80px blur and an infinite animation still cost compositing work
+   at zero opacity, and this is invisible in 2 of the 3 styles. */
+.style-blob {
+  display: none;
+  mask-image: radial-gradient(ellipse 85% 75% at 50% 0%, #000 30%, transparent 92%);
+  background: radial-gradient(
+      46% 50% at 18% 26%,
+      color-mix(in srgb, var(--color-accent) 78%, transparent),
+      transparent 68%
+    ),
+    radial-gradient(
+      42% 46% at 78% 20%,
+      color-mix(in srgb, var(--color-accent-violet) 66%, transparent),
+      transparent 68%
+    ),
+    radial-gradient(
+      44% 44% at 54% 82%,
+      color-mix(in srgb, var(--color-accent-cyan) 55%, transparent),
+      transparent 68%
+    );
+}
+
+:root[data-style="fluid"] .style-blob {
+  display: block;
+  opacity: 0.62;
+  filter: blur(76px);
+  will-change: transform;
+  animation: blob-drift 22s ease-in-out infinite alternate;
+}
+
+@keyframes blob-drift {
+  from {
+    transform: translate3d(-3%, -2%, 0) scale(1);
+  }
+  to {
+    transform: translate3d(4%, 3%, 0) scale(1.12);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root[data-style="fluid"] .style-blob {
+    animation: none;
+    will-change: auto;
+  }
+}
+
 .text-balance {
   text-wrap: balance;
 }
 
-.font-feature-tabular {
-  font-variant-numeric: tabular-nums;
-}

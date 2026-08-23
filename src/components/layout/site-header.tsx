@@ -2,6 +2,8 @@ import Link from "next/link";
 import { Container } from "@/components/ui/container";
 import { navLinks } from "./nav-links";
 import { ThemeToggle } from "./theme-toggle";
+import { VisualStyleToggle } from "./visual-style-toggle";
+import { ScrollProgress } from "./scroll-progress";
 import { MobileNav } from "./mobile-nav";
 import { profile } from "@/content/profile";
 
@@ -36,10 +38,12 @@ export function SiteHeader() {
           >
             {profile.resume.label}
           </a>
+          <VisualStyleToggle className="hidden lg:flex" />
           <ThemeToggle />
           <MobileNav />
         </div>
       </Container>
+      <ScrollProgress />
     </header>
   );
 }

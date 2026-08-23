@@ -69,7 +69,7 @@ export default async function ProjectPage({
           <ul className="flex flex-col gap-4">
             {project.whatIBuilt.map((line, i) => (
               <li key={i} className="flex gap-3 leading-relaxed text-fg-muted">
-                <span className="font-mono text-xs text-fg-faint">
+                <span className="text-xs text-fg-faint">
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <span>{line}</span>
@@ -104,7 +104,7 @@ export default async function ProjectPage({
       <section className="py-20 md:py-28">
         <Container className="flex flex-col items-start justify-between gap-8 md:flex-row md:items-center">
           <div>
-            <p className="font-mono text-xs uppercase tracking-wide text-fg-faint">Next up</p>
+            <p className="text-xs uppercase tracking-wide text-fg-faint">Next up</p>
             <Link
               href={`/work/${nextProject.slug}`}
               className="mt-3 inline-flex items-center gap-2 font-display text-2xl font-medium transition-colors hover:text-accent md:text-3xl"

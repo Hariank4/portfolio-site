@@ -8,7 +8,7 @@ export function TimelineRow({ item }: { item: TimelineItem }) {
       as="li"
       className="grid grid-cols-1 gap-2 border-t border-border py-8 first:border-t-0 md:grid-cols-[160px_1fr]"
     >
-      <div className="font-mono text-xs uppercase tracking-wide text-fg-faint">{item.period}</div>
+      <div className="text-xs uppercase tracking-wide text-fg-faint">{item.period}</div>
       <div className="flex flex-col gap-3">
         <div>
           <h3 className="font-display text-xl font-medium text-fg md:text-2xl">{item.title}</h3>

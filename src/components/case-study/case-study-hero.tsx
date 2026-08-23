@@ -18,7 +18,7 @@ export function CaseStudyHero({ project }: { project: Project }) {
 
         <div className="mt-8 flex flex-wrap items-center gap-3">
           <StatusBadge status={project.status} />
-          <span className="font-mono text-xs uppercase tracking-wide text-fg-faint">
+          <span className="text-xs uppercase tracking-wide text-fg-faint">
             {project.timeframe}
           </span>
         </div>

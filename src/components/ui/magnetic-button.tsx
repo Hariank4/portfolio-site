@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { m, useReducedMotion } from "framer-motion";
 import { useRef, useState, type ReactNode } from "react";
 
 /**
@@ -30,7 +30,7 @@ export function Magnetic({ children, strength = 0.3 }: { children: ReactNode; st
   }
 
   return (
-    <motion.div
+    <m.div
       ref={ref}
       onMouseMove={handleMove}
       onMouseLeave={handleLeave}
@@ -39,6 +39,6 @@ export function Magnetic({ children, strength = 0.3 }: { children: ReactNode; st
       className="inline-block"
     >
       {children}
-    </motion.div>
+    </m.div>
   );
 }

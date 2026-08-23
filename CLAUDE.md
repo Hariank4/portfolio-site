@@ -3,8 +3,9 @@
 # Hariank Juneja — Portfolio
 
 Personal portfolio site (Next.js 16 App Router, TypeScript, Tailwind CSS v4, Framer Motion). No
-database, no API, no environment variables — every route is statically generated from typed
-content files.
+database. Every route is statically generated from typed content files, with one deliberate
+exception: `/api/chat` backs the chat widget and needs a `GEMINI_API_KEY` (the site builds and
+runs fine without it — the widget just says it's unconfigured). See `docs/architecture.md` §10.
 
 ## Read before doing anything
 

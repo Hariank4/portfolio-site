@@ -1,12 +1,19 @@
 import type { Metadata } from "next";
 import { GeistSans } from "geist/font/sans";
-import { GeistMono } from "geist/font/mono";
-import "@fontsource-variable/fraunces/full.css";
-import "@fontsource-variable/fraunces/full-italic.css";
+// Weight-only build, not `full`: Fraunces ships optical-size, SOFT and WONK
+// axes we never vary, and dropping them cuts the latin display font from
+// ~268KB to ~84KB. Same family name, so nothing else changes.
+import "@fontsource-variable/fraunces/wght.css";
+import "@fontsource-variable/fraunces/wght-italic.css";
 import "./globals.css";
+import { MotionProvider } from "@/components/motion-provider";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
+import { ChatWidget } from "@/components/chat/chat-widget";
 import { profile } from "@/content/profile";
+import { projects } from "@/content/projects";
+import { experience } from "@/content/experience";
+import { skillGroups } from "@/content/skills";
 import { SITE_URL } from "@/lib/constants";
 
 // Fonts are fully self-hosted (the `geist` package and Fontsource's Fraunces
@@ -53,9 +60,21 @@ const themeInitScript = `
     if (stored === "light" || stored === "dark") {
       document.documentElement.setAttribute("data-theme", stored);
     }
+    var style = localStorage.getItem("visualStyle");
+    if (style === "fluid" || style === "minimal" || style === "sharp") {
+      document.documentElement.setAttribute("data-style", style);
+    }
   } catch (e) {}
 })();
 `;
+
+// Built here (a server component) so the chat widget's client bundle never
+// pulls in the content files. See the note in chat-widget.tsx.
+const chatStarters = [
+  `What did ${profile.name.split(" ")[0]} build at ${experience[0].org.replace(/ Ltd\.$/, "")}?`,
+  `Tell me about ${projects[0].plainTitle}`,
+  `What's his experience with ${skillGroups[2].items[1]}?`,
+];
 
 const personJsonLd = {
   "@context": "https://schema.org",
@@ -77,7 +96,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${GeistSans.variable} ${GeistMono.variable} h-full antialiased`}
+      className={`${GeistSans.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <head>
@@ -94,11 +113,15 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         >
           Skip to content
         </a>
-        <SiteHeader />
-        <main id="main-content" className="flex-1">
-          {children}
-        </main>
-        <SiteFooter />
+        <div className="grain-overlay" aria-hidden="true" />
+        <MotionProvider>
+          <SiteHeader />
+          <main id="main-content" className="flex-1">
+            {children}
+          </main>
+          <SiteFooter />
+          <ChatWidget name={profile.name} starters={chatStarters} />
+        </MotionProvider>
       </body>
     </html>
   );

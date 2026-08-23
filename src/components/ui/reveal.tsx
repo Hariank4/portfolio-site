@@ -1,8 +1,8 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { m, useReducedMotion } from "framer-motion";
 import type { ReactNode } from "react";
-import { revealUp, staggerContainer } from "@/lib/motion";
+import { revealUp } from "@/lib/motion";
 
 export function RevealOnScroll({
   children,
@@ -16,7 +16,7 @@ export function RevealOnScroll({
   as?: "div" | "li";
 }) {
   const shouldReduceMotion = useReducedMotion();
-  const MotionTag = as === "li" ? motion.li : motion.div;
+  const MotionTag = as === "li" ? m.li : m.div;
 
   if (shouldReduceMotion) {
     const Tag = as;
@@ -34,32 +34,6 @@ export function RevealOnScroll({
     >
       {children}
     </MotionTag>
-  );
-}
-
-export function RevealGroup({
-  children,
-  className,
-  stagger = 0.08,
-}: {
-  children: ReactNode;
-  className?: string;
-  stagger?: number;
-}) {
-  const shouldReduceMotion = useReducedMotion();
-  if (shouldReduceMotion) {
-    return <div className={className}>{children}</div>;
-  }
-  return (
-    <motion.div
-      className={className}
-      initial="hidden"
-      whileInView="show"
-      viewport={{ once: true, margin: "-80px" }}
-      variants={staggerContainer(stagger)}
-    >
-      {children}
-    </motion.div>
   );
 }
 
@@ -93,7 +67,7 @@ export function RevealText({
     <span className={className}>
       {words.map((word, i) => (
         <span key={i} className="inline-block overflow-hidden pb-1 align-bottom">
-          <motion.span
+          <m.span
             className={`inline-block ${wordClassName ?? ""}`}
             initial={{ y: "110%" }}
             animate={{ y: "0%" }}
@@ -105,7 +79,7 @@ export function RevealText({
           >
             {word}
             {i < words.length - 1 ? " " : ""}
-          </motion.span>
+          </m.span>
         </span>
       ))}
     </span>
