@@ -50,10 +50,15 @@ export async function POST(request: Request) {
         .map((t) => ({ role: t.role, text: t.text.slice(0, MAX_MESSAGE_CHARS) }))
     : [];
 
-  const response = await fetch(
+  let response: Response;
+  try {
+    response = await fetch(
     `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`,
     {
       method: "POST",
+      // Without this a stalled upstream call leaves the widget on
+      // "Thinking…" forever, which reads as a hard freeze.
+      signal: AbortSignal.timeout(25_000),
       headers: { "content-type": "application/json", "x-goog-api-key": apiKey },
       body: JSON.stringify({
         systemInstruction: { parts: [{ text: buildSystemPrompt() }] },
@@ -61,15 +66,40 @@ export async function POST(request: Request) {
           ...history.map((t) => ({ role: t.role, parts: [{ text: t.text }] })),
           { role: "user", parts: [{ text: message }] },
         ],
-        // 400 truncated answers mid-sentence: this model counts reasoning
-        // tokens against the budget. Still capped to bound quota per request.
-        generationConfig: { maxOutputTokens: 900, temperature: 0.4 },
+        generationConfig: {
+          // Heavy reasoning is dead weight for "what did he build at X" — it
+          // drove replies to 15-30s and ate the output budget. Gemini 3 spells
+          // this `thinkingLevel`; the older `thinkingBudget` is a 400 here.
+          thinkingConfig: { thinkingLevel: "low" },
+          maxOutputTokens: 900,
+          temperature: 0.4,
+        },
       }),
     },
-  );
+    );
+  } catch (e) {
+    const timedOut = e instanceof DOMException && e.name === "TimeoutError";
+    console.error("Gemini request failed", e);
+    return NextResponse.json(
+      {
+        error: timedOut
+          ? "That took too long — please try again."
+          : "Sorry — I couldn't answer that right now.",
+      },
+      { status: 504 },
+    );
+  }
 
   if (!response.ok) {
     console.error("Gemini request failed", response.status, await response.text());
+    // The free tier allows only 20 requests/day, so 429 is a routine state
+    // here, not an edge case — say so plainly instead of looking broken.
+    if (response.status === 429) {
+      return NextResponse.json(
+        { error: "The chat has hit today's usage limit. Please try again tomorrow." },
+        { status: 429 },
+      );
+    }
     return NextResponse.json(
       { error: "Sorry — I couldn't answer that right now." },
       { status: 502 },
