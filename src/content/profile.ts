@@ -7,6 +7,8 @@
 export const profile = {
   name: "Hariank Juneja",
   initials: "HJ",
+  /** Name of the site's chat assistant — see components/chat/chat-widget.tsx. */
+  assistantName: "Jinx",
   avatar: null as string | null,
   roles: [
     "AI Engineer",

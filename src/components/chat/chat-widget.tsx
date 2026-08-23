@@ -6,11 +6,19 @@ import { MessageCircle, Send, X } from "lucide-react";
 type Turn = { role: "user" | "model"; text: string };
 
 /**
- * `name` and `starters` arrive as props rather than being imported here: this
- * is a client component in the root layout, so importing the content files
- * directly would ship every case study's prose to every page.
+ * `name`, `assistantName` and `starters` arrive as props rather than being
+ * imported here: this is a client component in the root layout, so importing
+ * the content files directly would ship every case study's prose to every page.
  */
-export function ChatWidget({ name, starters }: { name: string; starters: string[] }) {
+export function ChatWidget({
+  name,
+  assistantName,
+  starters,
+}: {
+  name: string;
+  assistantName: string;
+  starters: string[];
+}) {
   const [open, setOpen] = useState(false);
   const [turns, setTurns] = useState<Turn[]>([]);
   const [input, setInput] = useState("");
@@ -69,7 +77,7 @@ export function ChatWidget({ name, starters }: { name: string; starters: string[
         ref={triggerRef}
         type="button"
         onClick={() => setOpen((v) => !v)}
-        aria-label={open ? "Close chat" : `Ask about ${name}`}
+        aria-label={open ? "Close chat" : `Chat with ${assistantName}`}
         aria-expanded={open}
         className="fixed right-5 bottom-5 z-[80] flex h-12 w-12 items-center justify-center rounded-full border border-border bg-bg-raised text-fg shadow-lg transition-colors hover:border-accent hover:text-accent"
       >
@@ -83,13 +91,14 @@ export function ChatWidget({ name, starters }: { name: string; starters: string[
           // this fixed panel. See docs/architecture.md §8.
           <div
             role="dialog"
-            aria-label={`Ask about ${name}`}
+            aria-label={`Chat with ${assistantName}`}
             className="fixed right-5 bottom-20 z-[80] flex max-h-[min(32rem,calc(100vh-7rem))] w-[min(22rem,calc(100vw-2.5rem))] flex-col overflow-hidden rounded-lg border border-border bg-bg-raised shadow-2xl"
           >
             <div className="border-b border-border px-4 py-3">
-              <p className="font-display text-sm font-medium">Ask about {name}</p>
+              <p className="font-display text-sm font-medium">{assistantName}</p>
               <p className="mt-0.5 text-xs text-fg-faint">
-                Answers come only from this site&apos;s content.
+                {name}&apos;s personal chat assistant. Answers come only from
+                this site&apos;s content.
               </p>
             </div>
 

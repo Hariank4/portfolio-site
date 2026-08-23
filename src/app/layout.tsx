@@ -120,7 +120,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             {children}
           </main>
           <SiteFooter />
-          <ChatWidget name={profile.name} starters={chatStarters} />
+            <ChatWidget
+            name={profile.name}
+            assistantName={profile.assistantName}
+            starters={chatStarters}
+          />
         </MotionProvider>
       </body>
     </html>
