@@ -51,8 +51,9 @@ Everything is statically generated except `/api/chat` and the per-project OG ima
 **One display axis:** `data-theme` — `light` (default) / `dark`, on `<html>`, persisted to
 `localStorage`, set pre-hydration by an inline script in `layout.tsx` so there is no flash.
 
-The palette is 60/30/10: off-white ground (`#f8fafc`), navy type (`#0f172a`), one blue accent
-(`#2563eb`, lifting to `#3b82f6` in dark where the denser blue stops reading).
+The palette is 60/30/10: warm cream ground (`#faf8f4`), warm near-black type (`#1a1714`), one
+purple accent (`#5b3fd6`, lifting to `#b5a0f5` in dark where the denser purple stops reading),
+plus green for status. Warm rather than pure neutrals, deliberately — easier on the eyes.
 
 A three-way visual style switcher (`sharp`/`fluid`/`minimal`) used to sit alongside this. It was
 removed, along with all the ambient decoration that depended on it.

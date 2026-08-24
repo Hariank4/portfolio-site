@@ -105,8 +105,9 @@ restricted network environments. If re-introducing `next/font/google` later, swa
 
 All color/spacing/font tokens live in `src/app/globals.css`:
 - Plain CSS custom properties on `:root` (light values — the default) and
-  `:root[data-theme="dark"]` (dark overrides). **Light is the default**; the accent lifts from
-  `#2563eb` to `#3b82f6` in dark because the denser blue does not read against `#0f172a`.
+  `:root[data-theme="dark"]` (dark overrides). **Light is the default.** Warm cream ground, warm near-black type, one purple accent — warm
+  near-blacks rather than pure, which is easier to sit with. The accent lifts from `#5b3fd6` to
+  `#b5a0f5` in dark, since the denser purple does not read against `#100f0d`.
 - Re-exposed as Tailwind utilities via `@theme inline { --color-bg: var(--bg); ... }`, so `bg-bg`,
   `text-fg-muted`, `border-border`, etc. are available as normal Tailwind classes throughout the
   component tree.
@@ -118,9 +119,10 @@ All color/spacing/font tokens live in `src/app/globals.css`:
   `react-hooks/set-state-in-effect` lint error and the hydration-mismatch class of bugs that
   pattern invites.
 - Contrast: every text/background pair is checked against WCAG AA (4.5:1). Current ratios —
-  light: fg 17.06, muted 7.24, faint 4.55, accent 4.94, accent-fg-on-accent 5.17; dark: fg 17.06,
-  muted 6.96, faint 5.16, accent 4.85, accent-fg-on-accent 4.85. **`--fg-faint` in light mode is
-  the tightest at 4.55** — do not darken the background or lighten that token without re-measuring.
+  light: fg 16.83, muted 6.21, faint 4.88, accent 6.33, accent-fg-on-accent 6.72, success 4.88;
+  dark: fg 16.98, muted 6.74, faint 4.86, accent 8.49, accent-fg-on-accent 8.29. **`--fg-faint` in
+  light is the tightest at 4.88** — it failed at 3.93 on the first pass and had to be darkened, so
+  re-measure rather than eyeballing if either it or `--bg` moves.
 
 ## 7. Motion architecture
 

@@ -2,25 +2,25 @@
 
 /* ---------------------------------------------------------------------- */
 /* Design tokens. Light is the default; dark is a fully supported variant. */
-/* Palette is 60/30/10 — off-white ground, navy type, one blue accent.     */
+/* 60/30/10 — warm cream ground, warm near-black type, one purple accent.  */
 /* ---------------------------------------------------------------------- */
 
 :root {
-  --bg: #f8fafc;
+  --bg: #faf8f4;
   --bg-raised: #ffffff;
-  --bg-raised-2: #f1f5f9;
-  --border: #e2e8f0;
-  --border-strong: #cbd5e1;
-  --fg: #0f172a;
-  --fg-muted: #475569;
-  --fg-faint: #64748b;
-  --accent: #2563eb;
+  --bg-raised-2: #f2efe9;
+  --border: #e7e2d9;
+  --border-strong: #d6d0c5;
+  --fg: #1a1714;
+  --fg-muted: #635c54;
+  --fg-faint: #736c63;
+  --accent: #5b3fd6;
   --accent-fg: #ffffff;
-  --accent-soft: #dbeafe;
-  --accent-cyan: #0284c7;
-  --accent-violet: #7c3aed;
-  --accent-amber: #b45309;
-  --success: #10b981;
+  --accent-soft: #ece7fb;
+  --accent-cyan: #0e7490;
+  --accent-violet: #5b3fd6;
+  --accent-amber: #9a6700;
+  --success: #2d7a5f;
 
   --radius-md: 12px;
   --radius-lg: 20px;
@@ -28,24 +28,24 @@
   color-scheme: light;
 }
 
-/* Dark inverts around the same navy. The accent lifts to a brighter blue —
-   #2563eb is too dense to read against #0f172a. */
+/* Warm near-black rather than pure — easier to sit with, and it keeps the
+   cream/purple relationship intact instead of flipping to a cold grey. */
 :root[data-theme="dark"] {
-  --bg: #0f172a;
-  --bg-raised: #1e293b;
-  --bg-raised-2: #334155;
-  --border: #1e293b;
-  --border-strong: #334155;
-  --fg: #f8fafc;
-  --fg-muted: #94a3b8;
-  --fg-faint: #7c8ba1;
-  --accent: #3b82f6;
-  --accent-fg: #0f172a;
-  --accent-soft: rgba(59, 130, 246, 0.16);
-  --accent-cyan: #38bdf8;
-  --accent-violet: #a78bfa;
-  --accent-amber: #fbbf24;
-  --success: #34d399;
+  --bg: #100f0d;
+  --bg-raised: #1a1816;
+  --bg-raised-2: #252220;
+  --border: #2b2724;
+  --border-strong: #3c3733;
+  --fg: #f4f1ea;
+  --fg-muted: #a09890;
+  --fg-faint: #877f76;
+  --accent: #b5a0f5;
+  --accent-fg: #14120f;
+  --accent-soft: rgba(181, 160, 245, 0.15);
+  --accent-cyan: #67d2e8;
+  --accent-violet: #b5a0f5;
+  --accent-amber: #e0a955;
+  --success: #5fc79a;
 
   color-scheme: dark;
 }
@@ -77,8 +77,8 @@
 /* Display type. Tight tracking is the whole look — keep it on the class so
    every heading inherits it without repeating the value. */
 .font-display {
-  font-weight: 500;
-  letter-spacing: -0.03em;
+  font-weight: 400;
+  letter-spacing: -0.02em;
 }
 
 .eyebrow {
@@ -98,6 +98,11 @@ body {
   background: var(--color-bg);
   color: var(--color-fg);
   font-family: var(--font-sans);
+  /* The theme swap reads as a fade rather than a hard cut. Only these two
+     properties — transitioning everything would drag every hover with it. */
+  transition:
+    background-color 0.4s ease,
+    color 0.4s ease;
 }
 
 @media (prefers-reduced-motion: reduce) {

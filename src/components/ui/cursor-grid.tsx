@@ -52,9 +52,9 @@ type CursorGridProps = {
 export function CursorGrid({
   cellSize = 70,
   // A literal hex, not var(--accent): the draw loop parses this to RGB every
-  // frame. This mid-blue sits between the light and dark accents and reads on
-  // both grounds.
-  color = "#3b82f6",
+  // frame. This mid-purple sits between the light and dark accents and reads
+  // on both grounds.
+  color = "#8b74ea",
   radius = 140,
   falloff = "smooth",
   holdTime = 400,

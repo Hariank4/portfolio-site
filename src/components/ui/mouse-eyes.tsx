@@ -5,24 +5,34 @@ import { useEffect, useRef } from "react";
 /**
  * A small pair of eyes that follow the pointer.
  *
- * Reworked from the source component in three ways that mattered:
+ * Reworked from the source component in four ways that mattered:
  * - it was `w-screen h-screen` centred (a full-page demo), now it is a ~26px
  *   pair sized for the header;
  * - it listened on its own `onMouseMove`, so the eyes only tracked while the
  *   pointer was over them — the listener is on `window` here;
  * - it called setState on every mousemove, re-rendering the tree each time.
- *   Pupils are written straight to the DOM inside one rAF instead.
+ *   Pupils are written straight to the DOM inside one rAF instead;
+ * - the pupil carries a short CSS transition so gaps between frames ease out
+ *   rather than stepping. Without it the motion reads as jitter at this size.
  */
 
-const EYE_PX = 26;
-const MAX_MOVE = 5;
+const MAX_MOVE = 6;
+/** Pointer distance at which the pupil reaches full deflection. */
+const REACH = 260;
 
 function Eye({ pupilRef }: { pupilRef: React.RefObject<HTMLSpanElement | null> }) {
   return (
-    <span className="relative block h-[26px] w-[26px] rounded-full border border-border-strong bg-bg-raised">
+    <span
+      className="relative block h-[26px] w-[26px] rounded-full border bg-bg-raised"
+      style={{ borderColor: "var(--border-strong)" }}
+    >
       <span
         ref={pupilRef}
-        className="absolute top-1/2 left-1/2 block h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-fg"
+        className="absolute top-1/2 left-1/2 block h-2.5 w-2.5 rounded-full bg-fg"
+        style={{
+          transform: "translate(-50%, -50%)",
+          transition: "transform 140ms cubic-bezier(0.22, 1, 0.36, 1)",
+        }}
       />
     </span>
   );
@@ -50,9 +60,14 @@ export function MouseEyes() {
       const r = eye.getBoundingClientRect();
       const cx = r.left + r.width / 2;
       const cy = r.top + r.height / 2;
-      const angle = Math.atan2(my - cy, mx - cx);
-      const dist = Math.min(Math.hypot(mx - cx, my - cy) / 12, MAX_MOVE);
-      pupil.style.transform = `translate(calc(-50% + ${Math.cos(angle) * dist}px), calc(-50% + ${Math.sin(angle) * dist}px))`;
+      const dx = mx - cx;
+      const dy = my - cy;
+      const angle = Math.atan2(dy, dx);
+      // Ease toward full deflection so nearby movement still reads, instead of
+      // the pupil pinning the moment the pointer is a little way off.
+      const t = Math.min(Math.hypot(dx, dy) / REACH, 1);
+      const dist = MAX_MOVE * (t * (2 - t));
+      pupil.style.transform = `translate(calc(-50% + ${(Math.cos(angle) * dist).toFixed(2)}px), calc(-50% + ${(Math.sin(angle) * dist).toFixed(2)}px))`;
     };
 
     const onMove = (e: PointerEvent) => {
@@ -75,12 +90,7 @@ export function MouseEyes() {
   }, []);
 
   return (
-    <span
-      ref={wrapRef}
-      aria-hidden="true"
-      className="hidden items-center gap-1 md:inline-flex"
-      style={{ height: EYE_PX }}
-    >
+    <span ref={wrapRef} aria-hidden="true" className="hidden items-center gap-1.5 md:inline-flex">
       <Eye pupilRef={leftPupil} />
       <Eye pupilRef={rightPupil} />
     </span>
