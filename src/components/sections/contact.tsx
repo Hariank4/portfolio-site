@@ -23,7 +23,7 @@ export function Contact() {
         <Eyebrow index="07">Contact</Eyebrow>
 
         <RevealOnScroll>
-          <h2 className="mt-6 max-w-4xl font-display text-[clamp(2.6rem,7vw,5.4rem)] leading-[1.02] text-balance">
+          <h2 className="mt-6 max-w-4xl font-display text-[clamp(3rem,8vw,6rem)] leading-[1.04] text-balance">
             Let&apos;s build
             <br />
             <span className="italic text-accent">something real.</span>

@@ -67,7 +67,7 @@ Do not "fix" these without reading the reasoning.
 | Thing | Why |
 |---|---|
 | `createPortal` in `mobile-nav.tsx` / `chat-widget.tsx` | The header's `backdrop-blur` creates a containing block that breaks `position: fixed` sizing for anything rendered inside it. §8 of `architecture.md`. |
-| Fonts self-hosted via `geist` + `@fontsource-variable/playfair-display` | `fonts.googleapis.com` was unreachable during the original build. Do not switch to `next/font/google` without checking reachability. |
+| Fonts self-hosted via `geist` + `@fontsource-variable/cormorant-garamond` | `fonts.googleapis.com` was unreachable during the original build. Do not switch to `next/font/google` without checking reachability. |
 | Display font is the `wght` build, not `full` | Full builds carry axes the site never varies. Fraunces (the previous face) cost 268KB that way vs 84KB for `wght`. |
 | `m.*` everywhere, never `motion.*` | `LazyMotion` + `domAnimation` in `components/motion-provider.tsx`. Importing `motion` pulls the full bundle back in and silently undoes ~9KB — the code still *works*, which is what makes it easy to regress. |
 | Pointer work coalesced into one rAF | `pointermove` outpaces the display. `CustomCursor` and `MouseEyes` batch per frame; `CursorGrid` runs its own loop but halts when nothing is lit. |

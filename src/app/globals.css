@@ -68,17 +68,19 @@
   --color-success: var(--success);
 
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Playfair Display Variable", ui-serif, Georgia, serif;
+  --font-display: "Cormorant Garamond Variable", ui-serif, Georgia, serif;
 
   --radius-md: var(--radius-md);
   --radius-lg: var(--radius-lg);
 }
 
-/* Display type. Tight tracking is the whole look — keep it on the class so
-   every heading inherits it without repeating the value. */
+/* Display type. Cormorant Garamond rather than Playfair: Playfair bottoms out
+   at weight 400 and still reads heavy at display sizes, where this goes down
+   to 300 with far finer hairlines. Cormorant also runs small for its point
+   size, so the optical size is nudged up to compensate. */
 .font-display {
-  font-weight: 400;
-  letter-spacing: -0.02em;
+  font-weight: 300;
+  letter-spacing: -0.01em;
 }
 
 .eyebrow {

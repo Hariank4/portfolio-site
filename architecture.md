@@ -84,16 +84,20 @@ approach was replaced** with fully self-hosted packages:
   `import { GeistMono } from "geist/font/mono"` in `layout.tsx`. Internally this is
   `next/font/local` pointed at bundled woff2 files — same `.variable` API as `next/font/google`,
   zero network dependency at build or request time.
-- `@fontsource-variable/playfair-display` → imported directly for its CSS
-  (`@fontsource-variable/playfair-display/wght.css` and `wght-italic.css` in `layout.tsx`), which
-  defines `@font-face { font-family: 'Playfair Display Variable'; ... }` against local woff2
+- `@fontsource-variable/cormorant-garamond` → imported directly for its CSS
+  (`@fontsource-variable/cormorant-garamond/wght.css` and `wght-italic.css` in `layout.tsx`), which
+  defines `@font-face { font-family: 'Cormorant Garamond Variable'; ... }` against local woff2
   files. Referenced in `globals.css` as
-  `--font-display: "Playfair Display Variable", ui-serif, Georgia, serif;` — a plain string, not a
+  `--font-display: "Cormorant Garamond Variable", ui-serif, Georgia, serif;` — a plain string, not a
   CSS-variable indirection, since Fontsource doesn't hand back a `.variable` class the way
   `geist`/`next/font` do.
 
+  **Weight 300, and the face was chosen for that.** Playfair Display bottoms out at 400 and still
+  reads heavy at display sizes; Cormorant Garamond goes to 300 with far finer hairlines. It also
+  sits optically smaller at the same px, which is why the display clamps are larger than they look.
+
   **Always import the `wght` build, never `full`.** The full builds carry axes this site never
-  varies. Fraunces (the previous display face) cost ~268KB for the latin subsets that way versus
+  varies. Fraunces (an earlier display face) cost ~268KB for the latin subsets that way versus
   ~84KB for `wght`. Same lesson applies to any face swapped in later.
 
 This is a strict improvement over the original plan, not a compromise: no runtime or build-time

@@ -3,8 +3,8 @@ import { GeistSans } from "geist/font/sans";
 // Weight-only builds, not `full` — see architecture.md §5. Self-hosted rather
 // than next/font/google because fonts.googleapis.com was unreachable during
 // the original build.
-import "@fontsource-variable/playfair-display/wght.css";
-import "@fontsource-variable/playfair-display/wght-italic.css";
+import "@fontsource-variable/cormorant-garamond/wght.css";
+import "@fontsource-variable/cormorant-garamond/wght-italic.css";
 import "./globals.css";
 import { MotionProvider } from "@/components/motion-provider";
 import { CustomCursor } from "@/components/ui/custom-cursor";
@@ -17,9 +17,9 @@ import { experience } from "@/content/experience";
 import { skillGroups } from "@/content/skills";
 import { SITE_URL } from "@/lib/constants";
 
-// Fonts are fully self-hosted (the `geist` package and Fontsource's Fraunces
-// build both ship local woff2 files) so the build never depends on reaching
-// Google Fonts at build or request time.
+// Fonts are fully self-hosted (the `geist` package and Fontsource's Cormorant
+// Garamond build both ship local woff2 files) so the build never depends on
+// reaching Google Fonts at build or request time.
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
