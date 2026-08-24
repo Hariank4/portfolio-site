@@ -36,7 +36,7 @@ export function Hero() {
           {profile.roles.join(" · ")}
         </m.p>
 
-        <h1 className="mt-6 max-w-4xl font-display text-[clamp(3rem,8vw,6.4rem)] leading-[1.04] text-balance">
+        <h1 className="mt-6 max-w-4xl font-display text-[clamp(2.4rem,6vw,4.8rem)] leading-[1.06] text-balance">
           <RevealText text={profile.name} />
           <br />
           <RevealText
