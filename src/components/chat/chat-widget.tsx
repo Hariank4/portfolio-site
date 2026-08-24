@@ -5,6 +5,13 @@ import { createPortal } from "react-dom";
 import { MessageCircle, Send, X } from "lucide-react";
 type Turn = { role: "user" | "model"; text: string };
 
+export const OPEN_CHAT_EVENT = "jinx:open";
+
+/** Opens the chat widget from anywhere — see the listener below. */
+export function openChat() {
+  window.dispatchEvent(new Event(OPEN_CHAT_EVENT));
+}
+
 /**
  * `name`, `assistantName` and `starters` arrive as props rather than being
  * imported here: this is a client component in the root layout, so importing
@@ -27,6 +34,16 @@ export function ChatWidget({
   const triggerRef = useRef<HTMLButtonElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // The header's "Ask Jinx" button opens this widget. A window event keeps the
+  // two apart — no lifted state, no second copy of the chat UI.
+  useEffect(() => {
+    function handleOpen() {
+      setOpen(true);
+    }
+    window.addEventListener(OPEN_CHAT_EVENT, handleOpen);
+    return () => window.removeEventListener(OPEN_CHAT_EVENT, handleOpen);
+  }, []);
 
   useEffect(() => {
     if (!open) return;

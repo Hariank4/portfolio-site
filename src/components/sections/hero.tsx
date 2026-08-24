@@ -5,55 +5,28 @@ import { Container } from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
 import { Magnetic } from "@/components/ui/magnetic-button";
 import { RevealText } from "@/components/ui/reveal";
+import { CursorGrid } from "@/components/ui/cursor-grid";
 import { m, useReducedMotion } from "framer-motion";
-import { useRef } from "react";
 import { profile } from "@/content/profile";
 
 export function Hero() {
   const shouldReduceMotion = useReducedMotion();
 
-  // Pointer updates are coalesced into one rAF and applied as a transform, so
-  // a fast mouse costs one compositor frame rather than a style recalc and
-  // repaint per event.
-  const glowRef = useRef<HTMLDivElement>(null);
-  const frame = useRef(0);
-
-  function handleGlowMove(e: React.MouseEvent<HTMLElement>) {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    if (frame.current) return;
-    frame.current = requestAnimationFrame(() => {
-      frame.current = 0;
-      const el = glowRef.current;
-      if (!el) return;
-      el.style.transform = `translate3d(${x - 260}px, ${y - 260}px, 0)`;
-      el.style.opacity = "1";
-    });
-  }
-
-  function handleGlowLeave() {
-    if (glowRef.current) glowRef.current.style.opacity = "0";
-  }
-
   return (
     <section
       id="hero"
       aria-label="Introduction"
-      onMouseMove={shouldReduceMotion ? undefined : handleGlowMove}
-      onMouseLeave={shouldReduceMotion ? undefined : handleGlowLeave}
       className="relative overflow-hidden border-b border-border pt-20 pb-20 md:pt-28 md:pb-28"
     >
-      <div className="style-blob pointer-events-none absolute inset-0" />
-      <div className="bg-dot-grid pointer-events-none absolute inset-0 opacity-40 [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_40%,transparent_100%)]" />
-      <div
-        ref={glowRef}
-        aria-hidden="true"
-        style={{ willChange: "transform, opacity" }}
-        className="pointer-events-none absolute top-0 left-0 h-[520px] w-[520px] rounded-full opacity-0 transition-opacity duration-500 [background:radial-gradient(circle,var(--color-accent-soft),transparent_70%)]"
-      />
+      {/* The grid is the hero's only texture now — the blob, dot-grid and
+          radial glow all went with the style switcher. It needs to receive
+          pointermove, so the content above it is click-through except for the
+          controls, which opt back in. */}
+      <div className="absolute inset-0">
+        <CursorGrid cellSize={72} radius={150} />
+      </div>
 
-      <Container className="relative">
+      <Container className="pointer-events-none relative">
         <m.p
           initial={shouldReduceMotion ? undefined : { opacity: 0 }}
           animate={shouldReduceMotion ? undefined : { opacity: 1 }}
@@ -63,13 +36,13 @@ export function Hero() {
           {profile.roles.join(" · ")}
         </m.p>
 
-        <h1 className="mt-6 max-w-4xl font-display text-[length:var(--h1-size)] leading-[var(--h1-leading)] text-balance">
+        <h1 className="mt-6 max-w-4xl font-display text-[clamp(2.6rem,7vw,5.6rem)] leading-[1.02] text-balance">
           <RevealText text={profile.name} />
           <br />
           <RevealText
             text={profile.tagline}
             delay={0.15}
-            wordClassName="italic text-fg-muted"
+            wordClassName="italic text-accent"
           />
         </h1>
 
@@ -88,7 +61,7 @@ export function Hero() {
           whileInView={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.5 }}
-          className="mt-10 flex flex-wrap items-center gap-4"
+          className="pointer-events-auto mt-10 flex flex-wrap items-center gap-4"
         >
           <Magnetic>
             <Button href="/#work" size="md">

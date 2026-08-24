@@ -84,16 +84,17 @@ approach was replaced** with fully self-hosted packages:
   `import { GeistMono } from "geist/font/mono"` in `layout.tsx`. Internally this is
   `next/font/local` pointed at bundled woff2 files — same `.variable` API as `next/font/google`,
   zero network dependency at build or request time.
-- `@fontsource-variable/fraunces` → imported directly for its CSS
-  (`@fontsource-variable/fraunces/wght.css` and `wght-italic.css` in `layout.tsx`), which defines
-  `@font-face { font-family: 'Fraunces Variable'; ... }` against local woff2 files. Referenced in
-  `globals.css` as `--font-display: "Fraunces Variable", ui-serif, Georgia, serif;` — a plain
-  string, not a CSS-variable indirection, since Fontsource doesn't hand back a `.variable` class
-  the way `geist`/`next/font` do.
+- `@fontsource-variable/playfair-display` → imported directly for its CSS
+  (`@fontsource-variable/playfair-display/wght.css` and `wght-italic.css` in `layout.tsx`), which
+  defines `@font-face { font-family: 'Playfair Display Variable'; ... }` against local woff2
+  files. Referenced in `globals.css` as
+  `--font-display: "Playfair Display Variable", ui-serif, Georgia, serif;` — a plain string, not a
+  CSS-variable indirection, since Fontsource doesn't hand back a `.variable` class the way
+  `geist`/`next/font` do.
 
-  **Use the `wght` build, not `full`.** Fraunces ships optical-size, SOFT and WONK axes this site
-  never varies; `full.css` costs ~268KB for the latin subsets versus ~84KB for `wght`. Same family
-  name, identical rendering here. Don't "upgrade" these imports back to `full`.
+  **Always import the `wght` build, never `full`.** The full builds carry axes this site never
+  varies. Fraunces (the previous display face) cost ~268KB for the latin subsets that way versus
+  ~84KB for `wght`. Same lesson applies to any face swapped in later.
 
 This is a strict improvement over the original plan, not a compromise: no runtime or build-time
 dependency on Google's infrastructure at all, which is both faster and more resilient to deploy in
@@ -103,8 +104,9 @@ restricted network environments. If re-introducing `next/font/google` later, swa
 ## 6. Design tokens & theming
 
 All color/spacing/font tokens live in `src/app/globals.css`:
-- Plain CSS custom properties on `:root` (dark values — the default) and `:root[data-theme="light"]`
-  (light overrides).
+- Plain CSS custom properties on `:root` (light values — the default) and
+  `:root[data-theme="dark"]` (dark overrides). **Light is the default**; the accent lifts from
+  `#2563eb` to `#3b82f6` in dark because the denser blue does not read against `#0f172a`.
 - Re-exposed as Tailwind utilities via `@theme inline { --color-bg: var(--bg); ... }`, so `bg-bg`,
   `text-fg-muted`, `border-border`, etc. are available as normal Tailwind classes throughout the
   component tree.
@@ -115,10 +117,10 @@ All color/spacing/font tokens live in `src/app/globals.css`:
   `data-theme` attribute) rather than `useState`+`useEffect`, specifically to avoid the
   `react-hooks/set-state-in-effect` lint error and the hydration-mismatch class of bugs that
   pattern invites.
-- Contrast: every text/background color pair was checked against WCAG AA (4.5:1) with an axe-core
-  scan during the build; `--fg-faint` and the light-mode `--accent` were both adjusted from their
-  original plan values to pass. Don't drop these below their current lightness without re-checking
-  contrast.
+- Contrast: every text/background pair is checked against WCAG AA (4.5:1). Current ratios —
+  light: fg 17.06, muted 7.24, faint 4.55, accent 4.94, accent-fg-on-accent 5.17; dark: fg 17.06,
+  muted 6.96, faint 5.16, accent 4.85, accent-fg-on-accent 4.85. **`--fg-faint` in light mode is
+  the tightest at 4.55** — do not darken the background or lighten that token without re-measuring.
 
 ## 7. Motion architecture
 
@@ -170,29 +172,34 @@ or reintroduce the clipping bug.
   keep in sync with copy changes.
 - `sitemap.ts` / `robots.ts` are Next.js metadata-route conventions, not static files.
 
-## 10. Visual styles & the chat widget
+## 10. Interaction layer & the chat widget
 
-**Visual styles.** A `data-style` attribute on `<html>` selects `sharp` (default), `fluid`, or
-`minimal`. Same mechanism as theming (§6): CSS-variable blocks in `globals.css`, persisted to
-`localStorage("visualStyle")`, set pre-hydration by the inline script in `layout.tsx`.
-`ThemeToggle` and `VisualStyleToggle` share `lib/use-persisted-attribute.ts`.
+**The visual style switcher was removed.** There is no `data-style` attribute, no
+`sharp`/`fluid`/`minimal`, and no ambient decoration (the gradient blob, the grain overlay and
+the dot-grid all went with it). Only `data-theme` remains — see §6.
 
-**Style and theme are orthogonal, and must stay that way.** `data-theme` owns the ground colour;
-`data-style` owns type, surface treatment and density. So a `[data-style]` block may never
-hard-code a colour — every surface it sets is `color-mix`ed from `--bg`/`--fg`, which is why all
-three styles read correctly in both themes. `minimal` in particular is a *density* change, not a
-light mode: it flattens `--bg-raised` onto `--bg` and derives hairline borders from the current
-foreground. A style that hard-codes, say, a light background would fight the theme toggle and
-produce unreadable combinations.
+**Cursor system.** Two pieces that deliberately do not overlap:
 
-Each style moves several levers together (that is what makes it read as a different design rather
-than a reskin): `--h1-size`, `--h1-leading`, `--display-weight`, `--display-tracking`,
-`--eyebrow-transform`, `--eyebrow-tracking`, the radius scale, and the border/raised-surface
-tokens. Two small semantic classes carry them — `.font-display` and `.eyebrow` — so components
-opt in by class instead of every style needing per-component overrides.
+- `ui/cursor-grid.tsx` — a canvas grid that lights up around the pointer, rendered **in the hero
+  only**. Ported from React Bits; its two CSS rules live in `globals.css` because this project
+  has no component stylesheets. Its rAF loop stops itself once no cell is lit, so an idle hero
+  costs nothing — do not "optimise" that into a permanent loop.
+- `ui/custom-cursor.tsx` — a dot that tracks the pointer with a ring trailing on a spring,
+  mounted sitewide inside `MotionProvider`.
 
-Decoration is switched with `display`, never opacity — see §11 for why that distinction is
-load-bearing for performance.
+Both gate on `(pointer: fine)` and `prefers-reduced-motion`, via `useSyncExternalStore` rather
+than setState-in-an-effect. **The native cursor is only hidden while the custom one is actually
+running** (the `has-custom-cursor` class on `<html>`); hiding it on touch would remove an
+affordance and give nothing back.
+
+The hero content sits in a `pointer-events-none` container so pointer moves reach the grid
+beneath it; the CTA row opts back in with `pointer-events-auto`.
+
+**Navbar.** `MouseEyes` (`ui/mouse-eyes.tsx`) is a small pair of eyes that track the pointer —
+reworked from a full-screen demo, listening on `window` and writing to the DOM inside one rAF
+rather than calling setState per mousemove. `AskJinxButton` opens the chat widget through a
+`window` event (`OPEN_CHAT_EVENT`, exported from `chat-widget.tsx`) so neither component owns
+the other's state and the chat UI is never duplicated.
 
 **Chat widget.** `/api/chat` (a Route Handler, Node runtime) proxies to the Gemini API. The
 system prompt is built by `lib/chat-context.ts` from the `src/content/` files verbatim — the whole
@@ -215,18 +222,21 @@ describes — do not un-portal it.
 the bytes on a cold load. That makes font choices the highest-leverage perf decisions here — see
 the `wght` note in §5. Measured on `/`: ~218KB fonts vs ~5KB other resources.
 
-**Decoration must cost nothing when it is invisible.** Three rules the §10 features follow, each
-of which was a real measured regression before it was fixed:
+**Pointer work must be coalesced.** Every pointer-driven feature in §10 batches into a single
+`requestAnimationFrame` rather than acting per event — `pointermove` fires faster than the display
+refreshes, so the uncoalesced version does redundant work every frame. This applies to
+`CustomCursor` (two motion values per update) and `MouseEyes` (two DOM writes). The source
+component `MouseEyes` was ported from called `setState` per mousemove, re-rendering the tree each
+time; that was the first thing changed.
 
-- The fluid blob uses `display: none` when inactive, not `opacity: 0`. At zero opacity its 80px
-  blur and infinite animation still ran in all three styles — continuous compositing for something
-  invisible in two of them.
-- The grain overlay has no `mix-blend-mode`. It is fixed and full-viewport, so a blend mode forces
-  the whole viewport to re-composite every scroll frame; at ~4% opacity the visual difference is
-  imperceptible.
-- The hero cursor-glow is a fixed-size element moved with `transform` and coalesced into one
-  `requestAnimationFrame`. Driving a gradient's position through CSS variables on every mousemove
-  repaints a full-viewport layer per event instead.
+`CursorGrid` is the exception that proves the rule: it drives its own rAF loop, but the loop
+**stops itself** once no cell is lit, so an idle hero costs nothing. Do not convert it to a
+permanent loop.
+
+**Gate interaction on capability, not assumption.** The cursor and grid both check
+`(pointer: fine)` and `prefers-reduced-motion` before attaching anything, via `useSyncExternalStore`
+rather than setState-in-an-effect (React 19 rejects the latter). The native cursor is hidden only
+while the custom one is actually running.
 
 **Keep content files out of client components.** `chat-widget.tsx` takes its copy as props from the
 root layout rather than importing `src/content/`. As a client component it would otherwise ship

@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import { GeistSans } from "geist/font/sans";
-// Weight-only build, not `full`: Fraunces ships optical-size, SOFT and WONK
-// axes we never vary, and dropping them cuts the latin display font from
-// ~268KB to ~84KB. Same family name, so nothing else changes.
-import "@fontsource-variable/fraunces/wght.css";
-import "@fontsource-variable/fraunces/wght-italic.css";
+// Weight-only builds, not `full` — see architecture.md §5. Self-hosted rather
+// than next/font/google because fonts.googleapis.com was unreachable during
+// the original build.
+import "@fontsource-variable/playfair-display/wght.css";
+import "@fontsource-variable/playfair-display/wght-italic.css";
 import "./globals.css";
 import { MotionProvider } from "@/components/motion-provider";
+import { CustomCursor } from "@/components/ui/custom-cursor";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { ChatWidget } from "@/components/chat/chat-widget";
@@ -60,10 +61,6 @@ const themeInitScript = `
     if (stored === "light" || stored === "dark") {
       document.documentElement.setAttribute("data-theme", stored);
     }
-    var style = localStorage.getItem("visualStyle");
-    if (style === "fluid" || style === "minimal" || style === "sharp") {
-      document.documentElement.setAttribute("data-style", style);
-    }
   } catch (e) {}
 })();
 `;
@@ -113,8 +110,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         >
           Skip to content
         </a>
-        <div className="grain-overlay" aria-hidden="true" />
         <MotionProvider>
+          <CustomCursor />
           <SiteHeader />
           <main id="main-content" className="flex-1">
             {children}

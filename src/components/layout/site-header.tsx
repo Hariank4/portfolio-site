@@ -2,21 +2,25 @@ import Link from "next/link";
 import { Container } from "@/components/ui/container";
 import { navLinks } from "./nav-links";
 import { ThemeToggle } from "./theme-toggle";
-import { VisualStyleToggle } from "./visual-style-toggle";
 import { ScrollProgress } from "./scroll-progress";
 import { MobileNav } from "./mobile-nav";
+import { AskJinxButton } from "./ask-jinx-button";
+import { MouseEyes } from "@/components/ui/mouse-eyes";
 import { profile } from "@/content/profile";
 
 export function SiteHeader() {
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-bg/80 backdrop-blur-md">
       <Container className="flex h-16 items-center justify-between md:h-20">
-        <Link
-          href="/"
-          className="font-display text-lg font-medium tracking-tight text-fg transition-colors hover:text-accent"
-        >
-          {profile.name}
-        </Link>
+        <div className="flex items-center gap-3">
+          <Link
+            href="/"
+            className="font-display text-lg text-fg transition-colors hover:text-accent"
+          >
+            {profile.name}
+          </Link>
+          <MouseEyes />
+        </div>
 
         <nav aria-label="Primary" className="hidden items-center gap-8 md:flex">
           {navLinks.map((link) => (
@@ -33,12 +37,12 @@ export function SiteHeader() {
         <div className="flex items-center gap-3">
           <a
             href={profile.resume.href}
-            className="hidden text-sm text-fg-muted transition-colors hover:text-fg md:inline"
+            className="hidden text-sm text-fg-muted transition-colors hover:text-fg lg:inline"
             download
           >
             {profile.resume.label}
           </a>
-          <VisualStyleToggle className="hidden lg:flex" />
+          <AskJinxButton name={profile.assistantName} />
           <ThemeToggle />
           <MobileNav />
         </div>

@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Menu, X } from "lucide-react";
 import { navLinks } from "./nav-links";
-import { VisualStyleToggle } from "./visual-style-toggle";
 import { profile } from "@/content/profile";
 
 export function MobileNav() {
@@ -83,9 +82,6 @@ export function MobileNav() {
                 </a>
               ))}
             </nav>
-            <div className="px-6">
-              <VisualStyleToggle className="w-fit" />
-            </div>
             <div className="flex flex-wrap gap-4 px-6 py-8 text-xs uppercase tracking-wide text-fg-muted">
               {profile.socials.map((s) => (
                 <a key={s.label} href={s.href} className="hover:text-accent">

@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Scratch Bolt prototype — a separate Vite app, not part of this build.
+    "bolt/**",
   ]),
 ]);
 
