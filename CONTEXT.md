@@ -4,7 +4,7 @@ Orientation for anyone (human or agent) picking this up cold. `CLAUDE.md` has th
 `architecture.md` has the how, `schema.md` has the content shapes. This file is the **state**:
 what exists, what was decided and why, and what is still open.
 
-Last updated: 2026-08-24.
+Last updated: 2026-08-25.
 
 ---
 
@@ -13,13 +13,14 @@ Last updated: 2026-08-24.
 Hariank Juneja's personal portfolio. Next.js 16 (App Router), React 19, TypeScript,
 Tailwind v4 (CSS-first, no `tailwind.config.js`), Framer Motion.
 
-75 tracked files. 13 routes: one homepage of stacked sections, four static case studies at
+80 tracked files. 13 routes: one homepage of stacked sections, four static case studies at
 `/work/[slug]`, and one dynamic API route.
 
-**Live:** https://portfolio-site-nine-eta-34.vercel.app
-**Repo:** https://github.com/Hariank4/portfolio-site — `main` and `v3` in sync.
-**Domain:** `hariankjuneja.tech` registered, **not yet attached to Vercel**. `SITE_URL` in
-`src/lib/constants.ts` already points at it.
+**Live:** https://hariankjuneja.tech — DNS propagated, nameservers on Vercel, SSL working.
+The apex 308-redirects to `www`. `portfolio-site-nine-eta-34.vercel.app` still resolves too.
+**Repo:** https://github.com/Hariank4/portfolio-site
+**Branches:** `main` is current. `image-addon` is the active working branch (imagery/credentials).
+`ui/ux` and `v3` are merged history; `v2` is stale at the old initial commit.
 
 ---
 
@@ -73,7 +74,7 @@ Do not "fix" these without reading the reasoning.
 | Pointer work coalesced into one rAF | `pointermove` outpaces the display. `CustomCursor` and `MouseEyes` batch per frame; `CursorGrid` runs its own loop but halts when nothing is lit. |
 | Native cursor hidden only while the custom one runs | Both it and `CursorGrid` gate on `(pointer: fine)` + `prefers-reduced-motion`. Hiding it on touch removes an affordance and gives nothing back. |
 | `chat-widget.tsx` takes copy as **props** | It is a client component in the root layout. Importing `src/content/` directly shipped every case study's prose to every page (~40KB). |
-| No raster images anywhere | None were supplied. The generative project covers in `project-cover.tsx` are a **stand-in for screenshots**, not a design choice. `profile.avatar` is `null` and rendered nowhere. |
+| Almost no raster images | No photography was supplied. The generative project covers in `project-cover.tsx` are a **stand-in for screenshots**, not a design choice. `profile.avatar` is `null` and rendered nowhere. The one exception is the navbar logo mark (`public/logo-mark.png`, via `next/image`). |
 | `* { border-color: var(--color-border) }` is unlayered | It therefore overrides every Tailwind `border-*` utility. `border-border-strong` does not actually work anywhere. Pre-existing; noted, not fixed. |
 | `bolt/` excluded from tsconfig and eslint | An untracked scratch Vite prototype living inside the repo. It failed the main typecheck until excluded. |
 
@@ -141,18 +142,21 @@ A bare `tsc --noEmit` false-positives on `LayoutProps` before `.next/` exists.
   only apply to newly launched processes.
 - **`.env.local.example` is committed; `.env.local` is not.** A real key was once pasted into the
   `.example` by mistake. Next.js only ever loads `.env.local`.
-- **`v2` is stale** — still at the old initial commit. Only `main` and `v3` are current.
+- **`v2` is stale** — still at the old initial commit. `main` is the current line.
+- **`bolt/` is an untracked scratch Vite prototype** living inside the repo. It is excluded in
+  both `tsconfig.json` and `eslint.config.mjs`; it broke the main typecheck until it was. Not
+  part of the build, not committed.
+- **Fontsource ships all subsets** (Cyrillic, Vietnamese) into `.next/static/media` — 11 woff2
+  files. This is *not* a problem: each `@font-face` is `unicode-range`-gated, and a real browser
+  downloads only 3. Verified. Don't "optimise" it.
 
 ---
 
 ## 8. Open work
 
-**Blocking production:**
-- Attach `hariankjuneja.tech` in Vercel → Settings → Domains, and point DNS. `SITE_URL` already
-  expects it; until then canonical URLs, OG tags and the sitemap name a host that does not serve
-  the site.
+**Nothing is blocking production.** The domain is live and the site is deployed.
 
-**Planned, not started** — imagery and credentials:
+**Planned, not started** — imagery and credentials (waiting on the actual files):
 - **Portrait in the About section.** `profile.avatar` is typed and null; nothing renders it. The
   left column under "01 ABOUT" is the intended home.
 - **MeraPath imagery** — into the Cyber सारथी case study and the Experience section. Platform
@@ -161,8 +165,12 @@ A bare `tsc --noEmit` false-positives on `LayoutProps` before `.next/` exists.
 - **Credentials section.** The résumé's Training entries (Infosys Springboard, Google Skills) are
   on the CV but nowhere on the site. Note that the LOR, joining letter and internship certificate
   prove *employment*, not certification — grouping them under "Certifications" would overstate
-  what they are.
-- Adding any of these means introducing `next/image`, which the site currently uses nowhere.
+  what they are. Planned interaction differs per issuer: Google credentials reveal badges on
+  click, Infosys ones reveal details.
+- **Band/music photos and awards**, framed as a "stress buster"-style section rather than a
+  résumé line.
+- `next/image` now has one call site (the navbar logo mark), so the pattern exists — but there
+  are still no content images anywhere.
 
 **Two checks before publishing imagery:**
 1. If a MeraPath image shows identifiable participants or colleagues, that is MeraPath's call and

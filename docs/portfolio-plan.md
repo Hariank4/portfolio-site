@@ -1,7 +1,13 @@
 # Hariank Juneja — Portfolio Implementation Plan
 
-Status: Approved for build (Phase 2 complete). This document is the source of truth for
-information architecture, design system, and technical decisions. Update it if scope changes.
+> **Historical document — not current state.** This is the original pre-build plan, kept as a
+> record of the reasoning behind the information architecture and design system. Several things
+> named here have since changed: the display font (Fraunces → Cormorant Garamond), the palette
+> (dark-first → light-first cream/purple), and one project (AI Medical Scribe → Class Attendance
+> Monitor). For what the site actually does today, read `architecture.md` and `CONTEXT.md`.
+
+Status: Approved for build (Phase 2 complete). This document was the source of truth for
+information architecture, design system, and technical decisions during the initial build.
 
 ## 0. Source material (real, verified)
 

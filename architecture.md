@@ -17,7 +17,7 @@ works today").
 - No CMS, no database, no analytics SDK. Every route is statically generated at build time
   (see §3) **except** `/api/chat`, the one dynamic route backing the chat widget — it is the
   single deliberate exception to "no server-side work" and the only thing needing an env var
-  (`GEMINI_API_KEY`). See §10.
+  (`GROQ_API_KEY`). See §10.
 
 ## 2. Directory layout
 
@@ -28,23 +28,27 @@ src/
     page.tsx                    home — composes section components in order
     template.tsx                 route-level transition wrapper (client component)
     not-found.tsx                 404 page
-    icon.tsx / apple-icon.tsx      generated favicon / apple touch icon (next/og ImageResponse)
+    icon.png / apple-icon.png      favicon / apple touch icon (static files, from the logo)
     opengraph-image.tsx            home page OG image (generated)
     sitemap.ts / robots.ts          metadata routes
     work/[slug]/
       page.tsx                      case-study template, statically generated per project
       opengraph-image.tsx            per-project OG image (generated, reads project.accent)
   components/
-    layout/    SiteHeader, MobileNav, SiteFooter, ThemeToggle, nav-links.ts
+    motion-provider.tsx        LazyMotion boundary — see §7
+    layout/    SiteHeader, MobileNav, SiteFooter, ThemeToggle, ScrollProgress,
+               AskJinxButton, nav-links.ts
     ui/        Container, Eyebrow, SectionHeading, Button, Tag, StatusBadge, RevealOnScroll,
                RevealText, Magnetic, ProjectCover, FeaturedProjectCard, BuildCard,
-               TimelineRow
+               TimelineRow, CursorGrid, CustomCursor, MouseEyes, TiltCard
     sections/  Hero, About, SelectedWork, Skills, Experience, Creative, OpenSource, Contact
                (one per numbered section on the home page, in render order)
     case-study/ CaseStudyHero, CaseStudySection, ArchitectureDiagram, SpecList, ChallengeList
+    chat/      ChatWidget — the /api/chat client, see §10
   content/     profile.ts, projects.ts, experience.ts, skills.ts, creative.ts — see schema.md
-  lib/         cn.ts (class merge helper), motion.ts (shared Framer Motion variants),
-               constants.ts (SITE_URL)
+  lib/         cn.ts (class merge helper), motion.ts (the revealUp variant),
+               constants.ts (SITE_URL), chat-context.ts (chat prompt builder),
+               use-persisted-attribute.ts (shared by ThemeToggle)
 ```
 
 Import alias: `@/*` → `./src/*` (see `tsconfig.json`).
@@ -68,11 +72,17 @@ comes entirely from the typed files in `src/content/`, imported directly into se
 ## 4. Client vs. server components
 
 Almost everything is a server component by default. `"use client"` is used only where interaction
-or browser APIs are required:
-- `ThemeToggle` (reads/writes `document.documentElement`, uses `useSyncExternalStore`)
-- `MobileNav` (open/close state, focus trap, portal)
-- `Hero`, `RevealOnScroll`/`RevealText`, `Magnetic`, `template.tsx` (all Framer
-  Motion — `useReducedMotion`, `whileInView`, animated props)
+or browser APIs are required — 14 files in total:
+- `ThemeToggle` (reads/writes `document.documentElement`, uses `useSyncExternalStore`) and
+  `use-persisted-attribute.ts`, the hook behind it
+- `MobileNav` (open/close state, focus trap, portal), `AskJinxButton`, `ChatWidget`
+- `Hero`, `RevealOnScroll`/`RevealText`, `Magnetic`, `TiltCard`, `ScrollProgress`,
+  `MotionProvider` — all Framer Motion (`useReducedMotion`, `whileInView`, animated props)
+- `CursorGrid`, `CustomCursor`, `MouseEyes` — canvas and pointer events
+
+`template.tsx` is **not** a client component. It used to be, for a Framer route transition; that
+is now a CSS animation (`.route-enter` in `globals.css`), which removed a hydration boundary
+wrapping every page's content. Don't reintroduce Framer there.
 
 ## 5. Fonts — self-hosted, not next/font/google
 
@@ -80,10 +90,14 @@ The build environment this was authored in could not reach `fonts.googleapis.com
 (network egress was blocked to that host specifically), so **the original plan's `next/font/google`
 approach was replaced** with fully self-hosted packages:
 
-- `geist` npm package → `import { GeistSans } from "geist/font/sans"` and
-  `import { GeistMono } from "geist/font/mono"` in `layout.tsx`. Internally this is
-  `next/font/local` pointed at bundled woff2 files — same `.variable` API as `next/font/google`,
-  zero network dependency at build or request time.
+- `geist` npm package → `import { GeistSans } from "geist/font/sans"` in `layout.tsx`. Internally
+  this is `next/font/local` pointed at bundled woff2 files — same `.variable` API as
+  `next/font/google`, zero network dependency at build or request time.
+
+  **GeistMono is deliberately not imported.** It was used for small uppercase labels (eyebrows,
+  tags, status badges) and cost 70KB for a single weight at a single size. Those labels now use
+  GeistSans with letter-spacing, which is near-identical at that scale. Don't reintroduce it
+  without a reason that justifies the weight.
 - `@fontsource-variable/cormorant-garamond` → imported directly for its CSS
   (`@fontsource-variable/cormorant-garamond/wght.css` and `wght-italic.css` in `layout.tsx`), which
   defines `@font-face { font-family: 'Cormorant Garamond Variable'; ... }` against local woff2
@@ -173,9 +187,13 @@ or reintroduce the clipping bug.
   card, canonical URL, and a `Person` JSON-LD block built from `profile.ts` (only fields backed by
   real data — no fabricated `alumniOf` beyond the actual school, no fake `sameAs` entries).
 - `work/[slug]/page.tsx`'s `generateMetadata()` overrides title/description/OG per case study.
-- `icon.tsx`, `apple-icon.tsx`, `opengraph-image.tsx`, and `work/[slug]/opengraph-image.tsx` all
-  use `next/og`'s `ImageResponse` to generate images at build time — no static image assets to
-  keep in sync with copy changes.
+- `opengraph-image.tsx` and `work/[slug]/opengraph-image.tsx` use `next/og`'s `ImageResponse` to
+  generate share images at build time — no static assets to keep in sync with copy changes.
+- `icon.png` and `apple-icon.png` are **static files**, not generated. They were `ImageResponse`
+  routes rendering an "HJ" text badge until the real logo existed. Next.js will not accept both a
+  static and a dynamic icon in the same segment, so the `.tsx` generators had to be deleted, not
+  merely bypassed. `apple-icon.png` deliberately uses the opaque cream-background artwork — iOS
+  composites its own mask and does not want transparency.
 - `sitemap.ts` / `robots.ts` are Next.js metadata-route conventions, not static files.
 
 ## 10. Interaction layer & the chat widget
@@ -220,12 +238,13 @@ describes — do not un-portal it.
 - Every route is fully static (see §3) — no data-fetching waterfalls, no client-side loading
   states for content.
 - Fonts are self-hosted (§5) — no external font request blocks first paint.
-- No image optimization pipeline needed because there are no raster images in the design (§ of
-  `portfolio-plan.md` explains why — no photography was supplied, so the visual system is
-  typography/diagram-led by design, not as a stopgap).
+- **Almost no images.** No photography was supplied, so the visual system is typography- and
+  diagram-led by design, not as a stopgap (`portfolio-plan.md` covers the reasoning). The only
+  raster asset is the navbar logo mark, via `next/image` in `site-header.tsx` and
+  `mobile-nav.tsx`. Content imagery is planned but not built.
 
-**Fonts dominate the payload.** With no images and a small JS bundle, the woff2 files are ~98% of
-the bytes on a cold load. That makes font choices the highest-leverage perf decisions here — see
+**Fonts dominate the payload.** With almost no images and a small JS bundle, the woff2 files are
+a large share of the bytes on a cold load. That makes font choices the highest-leverage perf decisions here — see
 the `wght` note in §5. Measured on `/`: ~218KB fonts vs ~5KB other resources.
 
 **Pointer work must be coalesced.** Every pointer-driven feature in §10 batches into a single

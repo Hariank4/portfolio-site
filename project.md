@@ -36,9 +36,15 @@ user provides, it goes in as an explicit placeholder (see the "Known placeholder
 "concept stage" framing over a vague-but-impressive-sounding claim.
 
 Two of the four projects in `src/content/projects.ts` are intentionally lighter than the other
-two: `ai-medical-scribe` is explicitly a `"Concept"` (no shipped code, said so on the page), and
-`heart-attack-detection-band` is a `"Prototype"`. Don't upgrade their status or backfill metrics
-for them without new source material to back it up.
+two: `class-attendance-monitor` is explicitly a `"Concept"` (three architectures designed and
+compared, but no shipped code — and the page says so), and `heart-attack-detection-band` is a
+`"Prototype"`. Don't upgrade their status or backfill metrics for them without new source
+material to back it up.
+
+`cyber-saarthi` deliberately has **no link** to the live site. It was paid client work for
+MeraPath, not Hariank's own product to drive traffic to. The domain still appears as plain text
+in the results line — that's a statement of fact, not a promotional link. Don't "helpfully"
+restore the link.
 
 ## Who this is for
 

@@ -4,7 +4,7 @@
 
 Personal portfolio site (Next.js 16 App Router, TypeScript, Tailwind CSS v4, Framer Motion). No
 database. Every route is statically generated from typed content files, with one deliberate
-exception: `/api/chat` backs the chat widget and needs a `GEMINI_API_KEY` (the site builds and
+exception: `/api/chat` backs the chat widget and needs a `GROQ_API_KEY` (the site builds and
 runs fine without it — the widget just says it's unconfigured). See `docs/architecture.md` §10.
 
 ## Read before doing anything
@@ -33,8 +33,8 @@ runs fine without it — the widget just says it's unconfigured). See `docs/arch
    `docs/architecture.md` §8 has the full explanation.
 4. **Don't switch fonts back to `next/font/google` without checking the environment can reach
    `fonts.googleapis.com` first.** They're self-hosted via the `geist` and
-   `@fontsource-variable/fraunces` packages specifically because that host was unreachable during
-   the original build. `docs/architecture.md` §5.
+   `@fontsource-variable/cormorant-garamond` packages specifically because that host was
+   unreachable during the original build. `docs/architecture.md` §5.
 5. **`npm run build` is the real check, not `npm run dev`.** It's the only command that runs the
    full TypeScript check; a plain `tsc --noEmit` will false-positive on `LayoutProps` if `.next/`
    hasn't been generated yet. Run build (and `npm run lint`) before considering any change done.
