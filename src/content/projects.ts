@@ -54,7 +54,9 @@ export const projects: Project[] = [
       "2Factor.in OTP",
       "Vercel",
     ],
-    links: [{ label: "cybersarthi.in", href: "https://cybersarthi.in" }],
+    // No public link: this was a paid client engagement (MeraPath), not his
+    // own product to promote traffic to.
+    links: [],
     problem:
       "Cyber-awareness training usually stops at a workshop deck: a session runs once, a handful of people see it, and there's no way to measure whether anything landed. MeraPath needed the workshop content to live as a real platform — one people could register for, learn from, get tested on, and walk away from with a verifiable certificate.",
     whyItMatters:
@@ -198,7 +200,6 @@ export const projects: Project[] = [
     whatIBuilt: [
       "Designed a checkpoint-verification architecture: the server privately picks 3 random moments in a class session and marks a student present if at least 2 are confirmed — the schedule is never sent to any client, so it can't be gamed.",
       "Iterated through three candidate architectures end to end — native BLE, web + rotating QR, web + instructor-hosted local Wi-Fi — evaluating each against real platform constraints (iOS Bluetooth restrictions, browser mixed-content rules, QR forwarding) rather than picking one and hoping.",
-      "Wrote a threat-and-mitigation analysis (token replay, device hand-off, code forwarding, network relay, rogue access points) and a full data model and API shape for the recommended design.",
       "Not yet built — this is active design work, listed here deliberately as a concept rather than a shipped product.",
     ],
     architecture: [
@@ -277,7 +278,14 @@ export const projects: Project[] = [
       "Onboard buzzer alerts",
       "Companion Bluetooth mobile app",
     ],
-    challenges: [],
+    challenges: [
+      {
+        challenge:
+          "Research surfaced sweat lactate as a physiological stress signal relevant to cardiac risk, detectable via an enzymatic lactate sensor.",
+        resolution:
+          "Those sensors are cost-prohibitive and not sold as off-the-shelf consumer hardware, so the signal was scoped out. The shipped prototype fuses HR, SpO2, and ECG instead — all from sensors (MAX30102, AD8232) that are actually accessible to a solo, self-funded build.",
+      },
+    ],
     resultsStatus: "Working solo prototype.",
     accent: "amber",
   },
