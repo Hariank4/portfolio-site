@@ -88,6 +88,20 @@
   letter-spacing: 0.2em;
 }
 
+/* Logo mark has a baked-in background (it's a raster signature, not a
+   vector), so it can't just inherit --bg like everything else — swap the
+   whole asset per theme instead. Same both-mounted, CSS-toggled pattern as
+   ThemeToggle's sun/moon icons. */
+.logo-mark-dark {
+  display: none;
+}
+:root[data-theme="dark"] .logo-mark-light {
+  display: none;
+}
+:root[data-theme="dark"] .logo-mark-dark {
+  display: block;
+}
+
 * {
   border-color: var(--color-border);
 }

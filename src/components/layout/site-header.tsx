@@ -21,7 +21,15 @@ export function SiteHeader() {
               width={32}
               height={32}
               priority
-              className="rounded-full"
+              className="logo-mark-light rounded-full"
+            />
+            <Image
+              src="/logo-mark-dark.png"
+              alt=""
+              width={32}
+              height={32}
+              priority
+              className="logo-mark-dark rounded-full"
             />
             <span className="font-display text-lg text-fg transition-colors hover:text-accent">
               {profile.name}
