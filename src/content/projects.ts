@@ -8,6 +8,13 @@ export type ArchitectureStep = { label: string; detail: string };
 export type Challenge = { challenge: string; resolution: string };
 export type ProjectLink = { label: string; href: string };
 
+/**
+ * Existing approaches in the same space, and how this project differs. Optional
+ * — only worth filling in where the honest answer is "this category already
+ * exists, here is the specific gap I'm addressing" rather than a novelty claim.
+ */
+export type PriorArt = { approach: string; difference: string };
+
 export type Project = {
   slug: string;
   kind: "flagship" | "build";
@@ -26,6 +33,7 @@ export type Project = {
   architecture: ArchitectureStep[];
   features: string[];
   challenges: Challenge[];
+  priorArt?: PriorArt[];
   resultsStatus: string;
   accent: "coral" | "cyan" | "violet" | "amber";
 };
@@ -196,10 +204,11 @@ export const projects: Project[] = [
     problem:
       "Manual and single-scan attendance methods — roll call, RFID taps, QR scans, one Bluetooth ping — verify presence at a single instant, not for a session's duration. That gap is easy to exploit: a student answers roll call for an absent classmate, or hands a friend their phone for a five-second check-in.",
     whyItMatters:
-      "Sampling presence at several unpredictable moments across a class, instead of once, raises the cost of faking attendance from a five-second favor to coordinating detectable presence at times neither party can predict — closer to a real anti-proxy mechanism than a digital roll call.",
+      "Sampling presence at several unpredictable moments across a class, instead of once, raises the cost of faking attendance from a five-second favor to coordinating detectable presence at times neither party can predict — closer to a real anti-proxy mechanism than a digital roll call. None of the individual pieces here are new: BLE, Wi-Fi, QR, geofencing and device binding have all been used for attendance before. The question this project actually asks is whether a specific combination of them — randomized, server-held checkpoints proven over a classroom-local network, in a browser — is a practical answer to the single-event problem the existing categories share.",
     whatIBuilt: [
       "Designed a checkpoint-verification architecture: the server privately picks 3 random moments in a class session and marks a student present if at least 2 are confirmed — the schedule is never sent to any client, so it can't be gamed.",
       "Iterated through three candidate architectures end to end — native BLE, web + rotating QR, web + instructor-hosted local Wi-Fi — evaluating each against real platform constraints (iOS Bluetooth restrictions, browser mixed-content rules, QR forwarding) rather than picking one and hoping.",
+      "Reviewed the existing categories of automated attendance first, and concluded the individual mechanisms are all well-established — so the project is framed around whether a particular combination closes a known gap, not around inventing anything.",
       "Not yet built — this is active design work, listed here deliberately as a concept rather than a shipped product.",
     ],
     architecture: [
@@ -245,8 +254,40 @@ export const projects: Project[] = [
           "Caught in design review before implementation: checkpoint confirmation is done as a full page navigation instead of a background request, since mixed-content restrictions apply to subresource fetches, not top-level navigation.",
       },
     ],
+    priorArt: [
+      {
+        approach:
+          "RFID / smart-card swipe — a card tapped against a reader on the way in.",
+        difference:
+          "A card is transferable: hand it to a classmate and the system records you as present. Presence here is tied to a device already bound to one account, and re-checked at moments neither party knows in advance.",
+      },
+      {
+        approach:
+          "Biometric — fingerprint or face at a fixed station.",
+        difference:
+          "Hard to fake, but needs dedicated hardware in every room, queues at high enrolment, and still only proves you were at the door once. This needs no hardware beyond a laptop, and samples across the session rather than at entry.",
+      },
+      {
+        approach:
+          "Static QR / barcode — one code displayed or posted, scanned once.",
+        difference:
+          "A code is just an image: photograph it, send it to a friend at home, and they redeem it. Confirmation here requires reaching an endpoint that only exists on the room's network, which a forwarded screenshot cannot route to.",
+      },
+      {
+        approach:
+          "GPS / geofencing — device location checked against a radius.",
+        difference:
+          "Indoor GPS drifts well beyond a single room and is spoofable with mock-location tooling. Network reachability is a coarser signal about the world, but a much harder one to fake from a bedroom.",
+      },
+      {
+        approach:
+          "Single-ping Bluetooth or Wi-Fi check-in — one detection marks you present.",
+        difference:
+          "This is the closest relative, and the gap it leaves is the whole point: it detects arrival, not attendance. A device can be handed over or walked out the moment the ping lands. Repeated randomized checkpoints are what turn a single event into a sampled one.",
+      },
+    ],
     resultsStatus:
-      "Concept stage — three architectures designed and compared, with a written threat/mitigation analysis. No code shipped yet.",
+      "Concept stage — three architectures designed and compared against the existing categories above. No code shipped yet, and no claim that any individual mechanism is novel; the open question is whether this particular combination measurably improves proxy resistance, which would take a built prototype and real testing to answer.",
     accent: "violet",
   },
   {

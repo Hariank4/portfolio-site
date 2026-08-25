@@ -41,6 +41,7 @@ One object, `profile`, `as const`. Drives the hero, about section, footer, and c
 ```ts
 type ArchitectureStep = { label: string; detail: string };
 type Challenge = { challenge: string; resolution: string };
+type PriorArt  = { approach: string; difference: string };
 type ProjectLink = { label: string; href: string };
 
 type Project = {
@@ -69,7 +70,8 @@ type Project = {
                                        // Empty array → entire section is omitted, not shown empty.
   features: string[];                // case-study §05 — empty array omits the section
   challenges: Challenge[];            // case-study §06 — empty array omits the section
-  resultsStatus: string;               // case-study §07 — always shown (no empty-string guard)
+  priorArt?: PriorArt[];               // case-study §07 — optional; omitted entirely if absent
+  resultsStatus: string;               // §07, or §08 when priorArt is present — always shown
   accent: "coral" | "cyan" | "violet" | "amber";
     // maps to a CSS var in project-cover.tsx's accentVar and the OG image's accentHex —
     // both maps must stay in sync if you add a 5th accent value.
@@ -80,6 +82,13 @@ const flagshipProjects           // projects.filter(kind === "flagship") — cur
 const otherBuilds                // projects.filter(kind === "build") — currently 2
 function getProjectBySlug(slug)  // used by work/[slug]/page.tsx
 ```
+
+**On `priorArt`.** Use it where the honest framing is "this category of thing already exists,
+here is the specific gap I'm addressing" — not as a novelty claim. `class-attendance-monitor`
+is the only project using it: the mechanisms it combines (BLE, Wi-Fi, QR, geofencing, device
+binding) are all well-established, so the case study says so plainly rather than implying they
+were invented here. It reuses `ChallengeList` for rendering, since `approach → difference` is
+the same shape as `challenge → resolution`.
 
 `generateStaticParams()` in `work/[slug]/page.tsx` maps over the full `projects` array, not just
 `flagshipProjects` — so every project, regardless of `kind`, gets a real `/work/{slug}` page. A

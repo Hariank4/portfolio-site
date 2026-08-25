@@ -97,7 +97,20 @@ export default async function ProjectPage({
         </CaseStudySection>
       )}
 
-      <CaseStudySection index="07" title="Status">
+      {project.priorArt && project.priorArt.length > 0 && (
+        <CaseStudySection index="07" title="Prior art">
+          {/* Same statement → response shape as Challenges, so ChallengeList
+              renders it as-is rather than needing its own component. */}
+          <ChallengeList
+            items={project.priorArt.map((p) => ({
+              challenge: p.approach,
+              resolution: p.difference,
+            }))}
+          />
+        </CaseStudySection>
+      )}
+
+      <CaseStudySection index={project.priorArt?.length ? "08" : "07"} title="Status">
         <p className="leading-relaxed text-fg-muted">{project.resultsStatus}</p>
       </CaseStudySection>
 
