@@ -178,12 +178,15 @@ A bare `tsc --noEmit` false-positives on `LayoutProps` before `.next/` exists.
 **Checks before publishing any further imagery** — each of these caught something real:
 1. If a MeraPath image shows identifiable participants or colleagues, that is MeraPath's call.
    The photos now on the site were cleared by the user.
-2. **Look at what is in frame, not just who.** A cheque handover shot had a legible Axis Bank
-   MICR line, account code and signature in it — the drawer's banking data, not the subject's.
-   It is published cropped above the cheque. An LOR scan carries a supervisor's signature for
-   the same reason.
+2. **Look at what is in frame, not just who.** `cs-recognition.jpg` has a cheque in it, and the
+   original had a legible Axis Bank MICR line, account code and authorised signature — the
+   *drawer's* banking data, not the subject's, so subject consent does not cover it. It ships
+   with those three regions destroyed in the source file: downsampled to a handful of pixels,
+   then rescaled. A CSS blur would not do — it ships the original bytes. An LOR scan carries a
+   supervisor's signature for the same reason.
 3. Two source photos carry a GPS Map Camera watermark burning in the office street address and
-   coordinates, and a legible staff directory on the wall behind. Neither is currently published.
+   coordinates, plus a staff directory on the wall behind. The user has cleared these — the
+   extensions are in-house landlines — but neither is published yet.
 
 **Deferred by choice:** Cmd+K command palette; real embeddings for the chat (see §5).
 

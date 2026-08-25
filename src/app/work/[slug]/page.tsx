@@ -10,6 +10,7 @@ import { SpecList, ChallengeList } from "@/components/case-study/spec-list";
 import { Container } from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
 import { Photo } from "@/components/ui/photo";
+import { PhotoStack } from "@/components/ui/photo-stack";
 
 export function generateStaticParams() {
   return projects.map((p) => ({ slug: p.slug }));
@@ -66,11 +67,14 @@ export default async function ProjectPage({
             sizes="(min-width: 768px) 1120px, 100vw"
             priority
           />
-          {project.gallery.length > 1 && (
+          {(project.gallery.length > 1 || project.stack) && (
             <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
               {project.gallery.slice(1).map((image) => (
                 <Photo key={image.src} image={image} className="aspect-[3/2]" />
               ))}
+              {project.stack && (
+                <PhotoStack images={project.stack} className="aspect-[3/2]" />
+              )}
             </div>
           )}
         </Container>

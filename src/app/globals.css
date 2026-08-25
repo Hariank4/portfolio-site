@@ -185,3 +185,15 @@ body {
     cursor: none;
   }
 }
+
+/* Fanned photo pile — see components/ui/photo-stack.tsx. Each card carries its
+   own --rest / --hover transform inline, because a Tailwind group-hover variant
+   cannot take a per-instance arbitrary value. */
+.photo-stack__card {
+  transform: var(--rest);
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.photo-stack:hover .photo-stack__card {
+  transform: var(--hover);
+}

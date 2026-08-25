@@ -40,6 +40,9 @@ export type Project = {
       a project with nothing to show is better off with no gallery than with a
       stock-looking filler shot. */
   gallery?: SiteImage[];
+  /** A fanned pile of related shots (team photos) sharing one cell beside the
+      gallery's second image — three photographs in one photograph's footprint. */
+  stack?: SiteImage[];
   resultsStatus: string;
   accent: "coral" | "cyan" | "violet" | "amber";
 };
@@ -124,14 +127,23 @@ export const projects: Project[] = [
       },
       {
         src: "/work/cs-recognition.jpg",
-        alt: "Hariank with two members of the MeraPath team in front of a screen showing Cyber सारथी branding.",
+        alt: "Hariank with two members of the MeraPath team, in front of a screen showing Cyber सारथी branding.",
         caption: "MeraPath Education Ltd.",
       },
+    ],
+    stack: [
       {
-        src: "/work/cs-team.jpg",
-        alt: "The Cyber सारथी team together at the MeraPath office.",
+        src: "/work/cs-team-1.jpg",
+        alt: "The Cyber सारथी team in front of a screen showing the project's branding at the MeraPath office.",
         caption: "The team",
-        position: "center 35%",
+      },
+      {
+        src: "/work/cs-team-2.jpg",
+        alt: "Four of the Cyber सारथी team together at the MeraPath office.",
+      },
+      {
+        src: "/work/cs-team-3.jpg",
+        alt: "A group selfie with the Cyber सारथी team at the MeraPath office.",
       },
     ],
     resultsStatus:
