@@ -173,30 +173,79 @@ export const projects: Project[] = [
     accent: "cyan",
   },
   {
-    slug: "ai-medical-scribe",
+    slug: "class-attendance-monitor",
     kind: "build",
     status: "Concept",
-    title: "AI Medical Scribe",
-    plainTitle: "AI Medical Scribe",
-    subtitle: "Voice-to-structured-documentation, for clinicians",
+    title: "Class Attendance Monitor",
+    plainTitle: "Class Attendance Monitor",
+    subtitle: "Anti-proxy classroom attendance via randomized presence checkpoints",
     summary:
-      "An early-stage product concept: doctors speak a consultation naturally, and AI converts it into structured prescription and documentation records — cutting the time spent on paperwork instead of patients.",
+      "A checkpoint-verification system that marks classroom attendance by confirming presence at several server-randomized moments across a session — not a single scan — closing the most common proxy-attendance loopholes by design.",
     timeframe: "Independent concept / exploration",
-    role: "Independent exploration",
-    tech: ["Concept stage — architecture not yet built"],
+    role: "Independent design study",
+    tech: [
+      "Concept stage — architecture designed, not yet built",
+      "Progressive Web App",
+      "Node.js / Python + PostgreSQL (proposed)",
+      "WIFI: QR network join",
+      "Local LAN-only checkpoint server",
+    ],
     links: [],
     problem:
-      "Clinical documentation eats into time doctors could spend with patients — writing up prescriptions and consultation notes by hand or by slow structured-entry forms is repetitive and error-prone.",
+      "Manual and single-scan attendance methods — roll call, RFID taps, QR scans, one Bluetooth ping — verify presence at a single instant, not for a session's duration. That gap is easy to exploit: a student answers roll call for an absent classmate, or hands a friend their phone for a five-second check-in.",
     whyItMatters:
-      "Reducing documentation overhead is one of the more concrete, well-scoped ways AI can help in healthcare without requiring clinical decision-making — it's a transcription-and-structuring problem, not a diagnosis problem.",
+      "Sampling presence at several unpredictable moments across a class, instead of once, raises the cost of faking attendance from a five-second favor to coordinating detectable presence at times neither party can predict — closer to a real anti-proxy mechanism than a digital roll call.",
     whatIBuilt: [
-      "Currently a scoped product concept: voice input during a consultation → AI-assisted structuring into prescriptions and documentation.",
-      "Not yet built — this is an active area of exploration, listed here deliberately as a concept rather than a shipped product.",
+      "Designed a checkpoint-verification architecture: the server privately picks 3 random moments in a class session and marks a student present if at least 2 are confirmed — the schedule is never sent to any client, so it can't be gamed.",
+      "Iterated through three candidate architectures end to end — native BLE, web + rotating QR, web + instructor-hosted local Wi-Fi — evaluating each against real platform constraints (iOS Bluetooth restrictions, browser mixed-content rules, QR forwarding) rather than picking one and hoping.",
+      "Wrote a threat-and-mitigation analysis (token replay, device hand-off, code forwarding, network relay, rogue access points) and a full data model and API shape for the recommended design.",
+      "Not yet built — this is active design work, listed here deliberately as a concept rather than a shipped product.",
     ],
-    architecture: [],
-    features: [],
-    challenges: [],
-    resultsStatus: "Concept stage — no code shipped yet.",
+    architecture: [
+      {
+        label: "Iteration A — Native app + BLE",
+        detail:
+          "Flutter app, instructor's device broadcasts a rotating BLE token. Ruled out: native iOS builds need Xcode, a Mac, and an Apple Developer account — none available for this project.",
+      },
+      {
+        label: "Iteration B — Web + rotating QR",
+        detail:
+          "PWA, checkpoint QR refreshed at random moments. Ruled out: no iOS browser supports Web Bluetooth at all (a WebKit-level restriction), and a QR code is just a photographable image — forwardable to someone off-site.",
+      },
+      {
+        label: "Iteration C — Web + instructor-hosted local Wi-Fi (recommended)",
+        detail:
+          "The instructor's laptop hosts the network; each checkpoint is confirmed by reaching a LAN-only endpoint. Closes the forwarding hole structurally — a screenshot has no network route to a private local IP.",
+      },
+    ],
+    features: [
+      "3 server-randomized checkpoint moments per session, never disclosed to the client, so presence can't be gamed by learning the schedule",
+      "2-of-3 checkpoint threshold for a present mark — tunable, tolerant of normal Wi-Fi flakiness",
+      "Manual instructor override on every session, with a required reason — treated as a first-class feature, not a fallback",
+      "Standard WIFI: QR format for network join, recognized natively by the iOS and Android camera apps — no custom scanner needed",
+    ],
+    challenges: [
+      {
+        challenge:
+          "No iOS browser supports Web Bluetooth at all — a WebKit-level restriction, not a background-mode limitation",
+        resolution:
+          "Dropped BLE entirely for the web path rather than building a platform-specific fallback; the local-Wi-Fi mechanism works identically on iOS and Android through one code path.",
+      },
+      {
+        challenge:
+          "A photographed QR code can be forwarded to someone outside the room and redeemed remotely",
+        resolution:
+          "Moved the checkpoint check to a LAN-only endpoint hosted on the instructor's device — a forwarded screenshot has no route to a private local IP, closing the hole structurally instead of patching it with geofencing.",
+      },
+      {
+        challenge:
+          "A background fetch() from the app's HTTPS page to the instructor's plain-HTTP local server is silently blocked by mixed-content rules",
+        resolution:
+          "Caught in design review before implementation: checkpoint confirmation is done as a full page navigation instead of a background request, since mixed-content restrictions apply to subresource fetches, not top-level navigation.",
+      },
+    ],
+    resultsStatus:
+      "Concept stage — three architectures designed and compared, with a written threat/mitigation analysis. No code shipped yet.",
     accent: "violet",
   },
   {
