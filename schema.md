@@ -71,6 +71,8 @@ type Project = {
   features: string[];                // case-study §05 — empty array omits the section
   challenges: Challenge[];            // case-study §06 — empty array omits the section
   priorArt?: PriorArt[];               // case-study §07 — optional; omitted entirely if absent
+  gallery?: SiteImage[];               // photographs, above §01 and deliberately unnumbered.
+                                       // [0] is the wide lead; the rest go 2-up beneath it.
   resultsStatus: string;               // §07, or §08 when priorArt is present — always shown
   accent: "coral" | "cyan" | "violet" | "amber";
     // maps to a CSS var in project-cover.tsx's accentVar and the OG image's accentHex —
@@ -104,6 +106,8 @@ type TimelineItem = {
   org: string;
   description: string;
   tags?: string[];    // optional — omit for entries where tags don't add anything
+  image?: SiteImage;  // optional — narrows the copy and sits beside it on desktop.
+                      // Rows without one are laid out exactly as before.
 };
 
 const experience: TimelineItem[]   // rendered as the Experience section timeline, in array order
@@ -126,8 +130,28 @@ const skillGroups: SkillGroup[]   // rendered as N columns (lg:grid-cols-4 in sk
 ```ts
 type CreativeItem = { title: string; description: string };
 
+const creativeImages: SiteImage[]    // exactly 3 — [0] is the 4:5 anchor, [1] and [2] stack
+                                        // beside it. A 4th would render off-layout.
+const creativeQuote: string          // one line, display italic, between photos and cards
 const creativeItems: CreativeItem[]  // rendered as a 3-col grid (md:grid-cols-3 in creative.tsx)
 ```
+
+## `images.ts`
+
+```ts
+type SiteImage = {
+  src: string;        // path under public/
+  alt: string;
+  caption?: string;   // overlay label. Only state what is verifiable — venue names on this
+                      // site are read off signage visible in the photo itself.
+  position?: string;  // CSS object-position. Most sources are 3:4 phone portraits being
+                      // cropped to landscape cells, so off-centre subjects need this.
+};
+```
+
+Rendered by `components/ui/photo.tsx`. Used by `creative.ts` (`creativeImages`), `projects.ts`
+(`gallery`) and `experience.ts` (`image`). Resize sources to ~1400–1600px on the long edge before
+committing — `next/image` serves scaled variants regardless, so originals only inflate the repo.
 
 ## Adding a new project end to end
 

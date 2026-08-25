@@ -74,7 +74,8 @@ Do not "fix" these without reading the reasoning.
 | Pointer work coalesced into one rAF | `pointermove` outpaces the display. `CustomCursor` and `MouseEyes` batch per frame; `CursorGrid` runs its own loop but halts when nothing is lit. |
 | Native cursor hidden only while the custom one runs | Both it and `CursorGrid` gate on `(pointer: fine)` + `prefers-reduced-motion`. Hiding it on touch removes an affordance and gives nothing back. |
 | `chat-widget.tsx` takes copy as **props** | It is a client component in the root layout. Importing `src/content/` directly shipped every case study's prose to every page (~40KB). |
-| Almost no raster images | No photography was supplied. The generative project covers in `project-cover.tsx` are a **stand-in for screenshots**, not a design choice. `profile.avatar` is `null` and rendered nowhere. The one exception is the navbar logo mark (`public/logo-mark.png`, via `next/image`). |
+| Generative project covers | `project-cover.tsx` is still a **stand-in for screenshots**, not a design choice — it just no longer applies everywhere. Real photography now lives in `public/creative/` (Creative section) and `public/work/` (Cyber सारथी gallery, MeraPath timeline row), all through `ui/photo.tsx`. `profile.avatar` is still `null` and rendered nowhere. |
+| Two logo marks, swapped in CSS | The mark is a raster with its background baked in, so it cannot inherit `--bg`. Both variants are mounted and `data-theme` toggles which one displays — same approach as `ThemeToggle`'s two icons. |
 | `* { border-color: var(--color-border) }` is unlayered | It therefore overrides every Tailwind `border-*` utility. `border-border-strong` does not actually work anywhere. Pre-existing; noted, not fixed. |
 | `bolt/` excluded from tsconfig and eslint | An untracked scratch Vite prototype living inside the repo. It failed the main typecheck until excluded. |
 
@@ -156,26 +157,33 @@ A bare `tsc --noEmit` false-positives on `LayoutProps` before `.next/` exists.
 
 **Nothing is blocking production.** The domain is live and the site is deployed.
 
-**Planned, not started** — imagery and credentials (waiting on the actual files):
+**Done** — photography landed (Aug 2026), all via `ui/photo.tsx` and the `SiteImage` type:
+- **Creative section** — one 4:5 anchor plus two stacked shots, above the three cards. Names the
+  band (Moksh) and the War of Bands win at VIHAAN '26, BIMTECH, both confirmed by the user and
+  the certificate scan.
+- **Cyber सारथी gallery** — unnumbered lead strip above §01, including the platform itself on
+  screen. This was the highest-value image available and it is now in.
+- **MeraPath** — a supporting shot on the Experience timeline row.
+
+**Planned, not started:**
 - **Portrait in the About section.** `profile.avatar` is typed and null; nothing renders it. The
   left column under "01 ABOUT" is the intended home.
-- **MeraPath imagery** — into the Cyber सारथी case study and the Experience section. Platform
-  screenshots are the highest-value change available to this site, because they would replace the
-  placeholder generative covers with the actual product.
 - **Credentials section.** The résumé's Training entries (Infosys Springboard, Google Skills) are
-  on the CV but nowhere on the site. Note that the LOR, joining letter and internship certificate
-  prove *employment*, not certification — grouping them under "Certifications" would overstate
-  what they are. Planned interaction differs per issuer: Google credentials reveal badges on
-  click, Infosys ones reveal details.
-- **Band/music photos and awards**, framed as a "stress buster"-style section rather than a
-  résumé line.
-- `next/image` now has one call site (the navbar logo mark), so the pattern exists — but there
-  are still no content images anywhere.
+  on the CV but nowhere on the site — plus the VIHAAN '26 merit certificate, which is the only
+  one of these that evidences a competitive win rather than course completion. Note that the LOR,
+  joining letter and internship certificate prove *employment*, not certification — grouping them
+  under "Certifications" would overstate what they are. Planned interaction differs per issuer:
+  Google credentials reveal badges on click, Infosys ones reveal details.
 
-**Two checks before publishing imagery:**
-1. If a MeraPath image shows identifiable participants or colleagues, that is MeraPath's call and
-   theirs — not ours. Platform screenshots avoid this, but must not expose real names or emails.
-2. An LOR scan carries a supervisor's handwritten signature.
+**Checks before publishing any further imagery** — each of these caught something real:
+1. If a MeraPath image shows identifiable participants or colleagues, that is MeraPath's call.
+   The photos now on the site were cleared by the user.
+2. **Look at what is in frame, not just who.** A cheque handover shot had a legible Axis Bank
+   MICR line, account code and signature in it — the drawer's banking data, not the subject's.
+   It is published cropped above the cheque. An LOR scan carries a supervisor's signature for
+   the same reason.
+3. Two source photos carry a GPS Map Camera watermark burning in the office street address and
+   coordinates, and a legible staff directory on the wall behind. Neither is currently published.
 
 **Deferred by choice:** Cmd+K command palette; real embeddings for the chat (see §5).
 
