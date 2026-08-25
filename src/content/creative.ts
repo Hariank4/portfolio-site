@@ -16,7 +16,6 @@ export const creativeItems: CreativeItem[] = [
   {
     title: "Short Film Direction",
     description:
-      // TODO: add the film's title/details here if you'd like it named specifically.
       "Directed and produced a short film project from concept to final cut — scripting, direction, and post, start to finish.",
   },
   {

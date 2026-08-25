@@ -54,7 +54,7 @@ function projectTerms(p: Project): Set<string> {
  * Returns [] when nothing matches — the core index still names every project,
  * so the assistant can answer or ask a follow-up rather than claim ignorance.
  */
-export function selectProjects(question: string, limit = 2): Project[] {
+function selectProjects(question: string, limit = 2): Project[] {
   const asked = tokenize(question);
   if (asked.length === 0) return [];
 
