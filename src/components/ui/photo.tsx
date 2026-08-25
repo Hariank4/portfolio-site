@@ -9,6 +9,11 @@ import type { SiteImage } from "@/content/images";
  * Almost every photo on this site is a 3:4 portrait off a phone, so cropping is
  * the norm rather than the exception; `image.position` is how a subject that
  * isn't centred survives that crop.
+ *
+ * Deliberately no `h-full` here: an explicit height resolves against the grid
+ * row even under `align-items: start`, so a tall sibling would stretch this and
+ * `aspect-*` would then derive a width from it and overflow the column. Pass
+ * `h-full` from the call site only where the parent has a real height.
  */
 export function Photo({
   image,
@@ -23,10 +28,7 @@ export function Photo({
 }) {
   return (
     <figure
-      className={cn(
-        "relative h-full overflow-hidden rounded-lg bg-bg-raised-2",
-        className,
-      )}
+      className={cn("relative overflow-hidden rounded-lg bg-bg-raised-2", className)}
     >
       <Image
         src={image.src}

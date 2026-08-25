@@ -67,13 +67,15 @@ export default async function ProjectPage({
             sizes="(min-width: 768px) 1120px, 100vw"
             priority
           />
+          {/* items-start: Photo is h-full, so a stretched row — which is what
+              expanding the stack creates — would blow the sibling up with it. */}
           {(project.gallery.length > 1 || project.stack) && (
-            <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div className="mt-4 grid grid-cols-1 items-start gap-4 sm:grid-cols-2">
               {project.gallery.slice(1).map((image) => (
                 <Photo key={image.src} image={image} className="aspect-[3/2]" />
               ))}
               {project.stack && (
-                <PhotoStack images={project.stack} className="aspect-[3/2]" />
+                <PhotoStack images={project.stack} className="self-start" />
               )}
             </div>
           )}
