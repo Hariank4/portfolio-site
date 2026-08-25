@@ -3,12 +3,16 @@
 // mentioned these as possibilities, but the source CV doesn't confirm them,
 // so they're left out rather than assumed).
 
+import type { SiteImage } from "./images";
+
 export type TimelineItem = {
   period: string;
   title: string;
   org: string;
   description: string;
   tags?: string[];
+  /** Optional supporting photo, shown beside the row on desktop. */
+  image?: SiteImage;
 };
 
 export const experience: TimelineItem[] = [
@@ -19,6 +23,11 @@ export const experience: TimelineItem[] = [
     description:
       "45-day internship across two initiatives: the AI Tender Command Centre (research, architecture, and an MVP with AI-powered tender analysis) and Cyber सारथी, where I helped design workshop content and built most of the production platform end to end.",
     tags: ["Next.js", "FastAPI", "Supabase", "RAG"],
+    image: {
+      src: "/work/merapath-office.jpg",
+      alt: "Hariank working with the team at the MeraPath office in Noida.",
+      position: "center 40%",
+    },
   },
   {
     period: "Current",

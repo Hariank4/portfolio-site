@@ -4,6 +4,8 @@
 // get full case-study pages at /work/[slug]; the other two are lighter
 // "also building" entries shown inline on the home page.
 
+import type { SiteImage } from "./images";
+
 export type ArchitectureStep = { label: string; detail: string };
 export type Challenge = { challenge: string; resolution: string };
 export type ProjectLink = { label: string; href: string };
@@ -34,6 +36,10 @@ export type Project = {
   features: string[];
   challenges: Challenge[];
   priorArt?: PriorArt[];
+  /** Photographs of the real thing. Optional — only cyber-saarthi has any, and
+      a project with nothing to show is better off with no gallery than with a
+      stock-looking filler shot. */
+  gallery?: SiteImage[];
   resultsStatus: string;
   accent: "coral" | "cyan" | "violet" | "amber";
 };
@@ -108,6 +114,24 @@ export const projects: Project[] = [
           "The codebase accumulated dead code and inconsistent patterns as features shipped quickly under a workshop deadline.",
         resolution:
           "Led a cleanup pass that removed 5,300+ lines of dead code, deduplicated components and hooks, and rewrote the core docs (schema, auth, architecture) so the codebase stayed maintainable past the internship.",
+      },
+    ],
+    gallery: [
+      {
+        src: "/work/cs-platform.jpg",
+        alt: "The Cyber सारथी platform open in a browser during a review session, showing the landing page with a photo from an awareness workshop.",
+        caption: "The platform, mid-review",
+      },
+      {
+        src: "/work/cs-recognition.jpg",
+        alt: "Hariank with two members of the MeraPath team in front of a screen showing Cyber सारथी branding.",
+        caption: "MeraPath Education Ltd.",
+      },
+      {
+        src: "/work/cs-team.jpg",
+        alt: "The Cyber सारथी team together at the MeraPath office.",
+        caption: "The team",
+        position: "center 35%",
       },
     ],
     resultsStatus:

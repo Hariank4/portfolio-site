@@ -1,8 +1,8 @@
-import Image from "next/image";
 import { Container } from "@/components/ui/container";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { RevealOnScroll } from "@/components/ui/reveal";
-import { creativeItems, creativeImages, type CreativeImage } from "@/content/creative";
+import { Photo } from "@/components/ui/photo";
+import { creativeItems, creativeImages, creativeQuote } from "@/content/creative";
 
 const [anchor, ...rest] = creativeImages;
 
@@ -22,7 +22,7 @@ export function Creative() {
             fixed aspect ratios on both sides would leave them ragged. */}
         <div className="mt-14 grid grid-cols-1 gap-6 md:grid-cols-[1.15fr_1fr]">
           <RevealOnScroll>
-            <Figure image={anchor} className="aspect-[4/5]" />
+            <Photo image={anchor} className="aspect-[4/5]" />
           </RevealOnScroll>
 
           <div className="grid grid-cols-1 gap-6 md:h-full md:grid-rows-2">
@@ -32,13 +32,19 @@ export function Creative() {
                 delay={(i + 1) * 0.08}
                 className="md:min-h-0"
               >
-                <Figure image={image} className="aspect-[16/10] md:aspect-auto md:h-full" />
+                <Photo image={image} className="aspect-[16/10] md:aspect-auto md:h-full" />
               </RevealOnScroll>
             ))}
           </div>
         </div>
 
-        <div className="mt-14 grid grid-cols-1 gap-6 md:grid-cols-3">
+        <RevealOnScroll delay={0.1}>
+          <p className="mx-auto mt-16 max-w-3xl text-balance text-center font-display text-2xl italic leading-snug text-fg-muted md:text-3xl">
+            {creativeQuote}
+          </p>
+        </RevealOnScroll>
+
+        <div className="mt-16 grid grid-cols-1 gap-6 md:grid-cols-3">
           {creativeItems.map((item, i) => (
             <RevealOnScroll
               key={item.title}
@@ -52,27 +58,5 @@ export function Creative() {
         </div>
       </Container>
     </section>
-  );
-}
-
-function Figure({ image, className }: { image: CreativeImage; className?: string }) {
-  return (
-    <figure
-      className={`relative h-full overflow-hidden rounded-lg bg-bg-raised-2 ${className ?? ""}`}
-    >
-      <Image
-        src={image.src}
-        alt={image.alt}
-        fill
-        sizes="(min-width: 768px) 45vw, 100vw"
-        className="object-cover"
-        style={image.position ? { objectPosition: image.position } : undefined}
-      />
-      {image.caption && (
-        <figcaption className="eyebrow absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent px-4 pb-3 pt-10 text-[11px] text-white">
-          {image.caption}
-        </figcaption>
-      )}
-    </figure>
   );
 }

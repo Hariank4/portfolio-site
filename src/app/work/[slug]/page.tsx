@@ -9,6 +9,7 @@ import { ArchitectureDiagram } from "@/components/case-study/architecture-diagra
 import { SpecList, ChallengeList } from "@/components/case-study/spec-list";
 import { Container } from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
+import { Photo } from "@/components/ui/photo";
 
 export function generateStaticParams() {
   return projects.map((p) => ({ slug: p.slug }));
@@ -53,6 +54,27 @@ export default async function ProjectPage({
   return (
     <article>
       <CaseStudyHero project={project} />
+
+      {/* Deliberately unnumbered — it sits above "01 Problem" as a lead image.
+          Folding it into the numbering would renumber every section below it,
+          for the one project that happens to have photographs. */}
+      {project.gallery && project.gallery.length > 0 && (
+        <Container className="pt-12 md:pt-16">
+          <Photo
+            image={project.gallery[0]}
+            className="aspect-[16/10] md:aspect-[2/1]"
+            sizes="(min-width: 768px) 1120px, 100vw"
+            priority
+          />
+          {project.gallery.length > 1 && (
+            <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+              {project.gallery.slice(1).map((image) => (
+                <Photo key={image.src} image={image} className="aspect-[3/2]" />
+              ))}
+            </div>
+          )}
+        </Container>
+      )}
 
       <CaseStudySection index="01" title="Problem">
         <p className="text-balance text-lg leading-relaxed text-fg md:text-xl">
