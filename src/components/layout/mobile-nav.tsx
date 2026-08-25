@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import Image from "next/image";
 import { Menu, X } from "lucide-react";
 import { navLinks } from "./nav-links";
 import { profile } from "@/content/profile";
@@ -60,7 +61,10 @@ export function MobileNav() {
             className="fixed inset-0 z-[90] flex flex-col bg-bg"
           >
             <div className="flex items-center justify-between px-6 py-5">
-              <span className="font-display text-lg">{profile.name}</span>
+              <span className="flex items-center gap-2">
+                <Image src="/logo-mark.png" alt="" width={28} height={28} className="rounded-full" />
+                <span className="font-display text-lg">{profile.name}</span>
+              </span>
               <button
                 type="button"
                 onClick={() => setOpen(false)}

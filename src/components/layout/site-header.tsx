@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Container } from "@/components/ui/container";
 import { navLinks } from "./nav-links";
 import { ThemeToggle } from "./theme-toggle";
@@ -13,11 +14,18 @@ export function SiteHeader() {
     <header className="sticky top-0 z-50 border-b border-border bg-bg/80 backdrop-blur-md">
       <Container className="flex h-16 items-center justify-between md:h-20">
         <div className="flex items-center gap-3">
-          <Link
-            href="/"
-            className="font-display text-lg text-fg transition-colors hover:text-accent"
-          >
-            {profile.name}
+          <Link href="/" className="flex items-center gap-2">
+            <Image
+              src="/logo-mark.png"
+              alt=""
+              width={32}
+              height={32}
+              priority
+              className="rounded-full"
+            />
+            <span className="font-display text-lg text-fg transition-colors hover:text-accent">
+              {profile.name}
+            </span>
           </Link>
           <MouseEyes />
         </div>
