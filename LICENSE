@@ -1,0 +1,65 @@
+This repository contains two different kinds of material, under two different
+terms. The split matters: the code is meant to be reused, the personal content
+is not.
+
+================================================================================
+1. SOURCE CODE — MIT License
+================================================================================
+
+Applies to the source code of this site: everything under `src/` except
+`src/content/`, plus the configuration files at the repository root.
+
+MIT License
+
+Copyright (c) 2026 Hariank Juneja
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+================================================================================
+2. PERSONAL CONTENT AND ASSETS — All rights reserved
+================================================================================
+
+Copyright (c) 2026 Hariank Juneja. All rights reserved.
+
+The MIT License above does NOT apply to any of the following, which may not be
+copied, redistributed, or reused without express written permission:
+
+  - Everything under `src/content/` — biography, project write-ups, case-study
+    prose, and all other written copy.
+  - Everything under `public/` — including but not limited to:
+      * `public/creative/`     photographs of Hariank Juneja and of other
+                               identifiable people
+      * `public/work/`         project and workplace photographs
+      * `public/credentials/`  certificates and credential badges issued to
+                               Hariank Juneja by third parties
+      * `public/resume/`       curriculum vitae
+      * the logo marks and app icons
+  - The name "Hariank Juneja", the personal brand, and the visual identity.
+
+Third-party marks appearing in the credential images in `public/credentials/`
+— including those of Google, Infosys, AICTE, and the Ministry of Education's
+Innovation Cell — remain the property of their respective owners. They appear
+solely as evidence of credentials genuinely issued to Hariank Juneja, and no
+affiliation, endorsement, or sponsorship is claimed or implied.
+
+--------------------------------------------------------------------------------
+
+In short: you are welcome to learn from the code, reuse it, and build your own
+site on top of it. Please do not republish the personal content, photographs,
+or certificates as your own.

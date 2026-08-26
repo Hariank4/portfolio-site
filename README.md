@@ -125,3 +125,15 @@ If you're adding content here, hold to that.
   pending details.
 
 §10 of [`docs/portfolio-plan.md`](./docs/portfolio-plan.md) tracks the full list.
+
+## License
+
+Two sets of terms — see [`LICENSE`](./LICENSE):
+
+- **Code** — MIT. Everything under `src/` except `src/content/`, plus the root config. Reuse it,
+  learn from it, build your own site on it.
+- **Content and assets** — all rights reserved. `src/content/`, everything in `public/`
+  (photographs, certificates, résumé, logo marks), and the personal brand.
+
+Third-party marks in the credential images belong to their respective owners and appear only as
+evidence of credentials genuinely issued to Hariank Juneja.
