@@ -26,6 +26,8 @@ export function PhotoCarousel({
   caption,
   ariaLabel = "Photographs",
   className,
+  frameClassName = "aspect-[3/2]",
+  showDots = true,
   priority,
   interval = 5000,
 }: {
@@ -33,7 +35,15 @@ export function PhotoCarousel({
   /** Fixed label for every slide. Omit to use each image's own `caption`. */
   caption?: string;
   ariaLabel?: string;
+  /** Outer wrapper: placement and width. Never the aspect ratio — the dots sit
+      below the frame, and an aspect here would squeeze them inside it. */
   className?: string;
+  /** The image frame itself: an aspect ratio, or `h-full` to fill a sized
+      parent (a stretched grid cell, say). */
+  frameClassName?: string;
+  /** Off in a cell too small to give the dots their own row; the arrows still
+      carry the affordance. */
+  showDots?: boolean;
   priority?: boolean;
   interval?: number;
 }) {
@@ -50,14 +60,9 @@ export function PhotoCarousel({
     return () => clearInterval(id);
   }, [paused, reduceMotion, count, interval]);
 
-  // The aspect utility belongs on each slide, not on the wrapper — the wrapper
-  // also holds the dots below the frame, and constraining it to the image's
-  // ratio would squeeze them into it.
-  const { aspect: slideAspect, rest: wrapperClass } = splitAspect(className);
-
   return (
     <div
-      className={cn("w-full", wrapperClass)}
+      className={cn("w-full", className)}
       role="region"
       aria-roledescription="carousel"
       aria-label={ariaLabel}
@@ -66,23 +71,28 @@ export function PhotoCarousel({
       onFocusCapture={() => setPaused(true)}
       onBlurCapture={() => setPaused(false)}
     >
-      <div className="relative overflow-hidden rounded-lg bg-bg-raised-2">
+      <div
+        className={cn(
+          "relative overflow-hidden rounded-lg bg-bg-raised-2",
+          frameClassName,
+        )}
+      >
         {/* One track translated by whole slides. Each slide is w-full and
             shrink-0, so the track is exactly count × 100% wide. */}
         <div
           className={cn(
-            "flex",
+            "flex h-full",
             !reduceMotion &&
               "transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]",
           )}
           style={{ transform: `translateX(-${index * 100}%)` }}
         >
           {images.map((image, i) => (
-            <div key={image.src} className="relative w-full shrink-0">
+            <div key={image.src} className="relative h-full w-full shrink-0">
               <Photo
                 image={image}
                 sizes="(min-width: 1024px) 1120px, 100vw"
-                className={cn("w-full", slideAspect)}
+                className="h-full w-full"
                 priority={priority && i === 0}
                 showCaption={false}
               />
@@ -121,7 +131,7 @@ export function PhotoCarousel({
 
       {/* Dots sit below the frame rather than on it — inside, they would land
           on the caption scrim in the same corner of the image. */}
-      {count > 1 && (
+      {count > 1 && showDots && (
         <div className="mt-3 flex items-center justify-center gap-2">
           {images.map((image, i) => (
             <button
@@ -140,20 +150,4 @@ export function PhotoCarousel({
       )}
     </div>
   );
-}
-
-/**
- * The caller sets the frame's shape via `className`, but that lands on the
- * outer wrapper. Each slide needs the aspect (or it collapses to zero height
- * inside the flex track) and the wrapper must not have it (it also holds the
- * dots). So split the two apart.
- */
-function splitAspect(className?: string) {
-  const parts = className?.split(/\s+/).filter(Boolean) ?? [];
-  const aspect = parts.filter((c) => c.includes("aspect-"));
-  const rest = parts.filter((c) => !c.includes("aspect-"));
-  return {
-    aspect: aspect.length ? aspect.join(" ") : "aspect-[3/2]",
-    rest: rest.join(" "),
-  };
 }

@@ -73,6 +73,7 @@ type Project = {
   priorArt?: PriorArt[];               // case-study §07 — optional; omitted entirely if absent
   gallery?: SiteImage[];               // photographs, above §01 and deliberately unnumbered.
                                        // [0] is the wide lead; the rest go 2-up beneath it.
+  heroWrapperClassName?: string;       // wrapper around a carousel lead: width + centring
   heroClassName?: string;              // className override for gallery[0] — default is a
                                        // landscape crop (fits a screenshot); a portrait phone
                                        // photo needs its own aspect + max-width instead, or the
@@ -139,8 +140,10 @@ const skillGroups: SkillGroup[]   // rendered as N columns (lg:grid-cols-4 in sk
 ```ts
 type CreativeItem = { title: string; description: string };
 
-const creativeImages: SiteImage[]    // slides of the section's carousel, any length. Crop each
-                                        // source to 3:2 so it fills the frame edge to edge.
+const creativeAnchor: SiteImage      // left-hand portrait of the photo block (4:5 frame)
+const creativeAward: SiteImage[]     // top-right cell — a 2-slide carousel: the win, then the
+                                        // certificate evidencing it
+const creativeGroup: SiteImage       // bottom-right cell
 const creativeQuote: string          // one line, display italic, between photos and cards
 const creativeItems: CreativeItem[]  // rendered as a 3-col grid (md:grid-cols-3 in creative.tsx)
 ```

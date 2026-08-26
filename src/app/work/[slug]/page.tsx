@@ -100,6 +100,7 @@ export default async function ProjectPage({
                   caption="The team"
                   ariaLabel="Team photographs"
                   className="self-start"
+                  frameClassName="aspect-[3/2]"
                 />
               )}
             </div>
@@ -115,7 +116,8 @@ export default async function ProjectPage({
           <PhotoCarousel
             images={project.carousel}
             ariaLabel="Prototype photographs"
-            className={project.heroClassName ?? "aspect-[16/10] md:aspect-[2/1]"}
+            className={project.heroWrapperClassName}
+            frameClassName={project.heroClassName ?? "aspect-[16/10] md:aspect-[2/1]"}
             priority
           />
         </Container>

@@ -9,31 +9,39 @@ export type CreativeItem = {
   description: string;
 };
 
-// Carousel slides, in order. Every file is pre-cropped to 3:2 so each one
-// fills the frame edge to edge — including the certificate, whose paper margin
-// absorbs the trim without touching any of its text.
-export const creativeImages: SiteImage[] = [
-  {
-    src: "/creative/guitar-solo.jpg",
-    alt: "Hariank singing and playing acoustic guitar on stage at a university event.",
-    caption: "Manav Rachna University",
-  },
+/** Left-hand anchor of the section's photo block, portrait. */
+export const creativeAnchor: SiteImage = {
+  src: "/creative/guitar-solo.jpg",
+  alt: "Hariank singing and playing acoustic guitar on stage at a university event.",
+  caption: "Manav Rachna University",
+  position: "center 30%",
+};
+
+/**
+ * Top-right cell. The only carousel in this section: the win and the
+ * certificate that evidences it, in one cell rather than two — the claim and
+ * its proof belong together, and the layout has no room for a fourth photo.
+ */
+export const creativeAward: SiteImage[] = [
   {
     src: "/creative/band-bimtech.jpg",
     alt: "Moksh on stage at BIMTECH, in front of the band's name in lights.",
     caption: "1st · War of Bands, VIHAAN '26",
+    position: "center 70%",
   },
   {
     src: "/creative/vihaan-certificate.jpg",
     alt: "VIHAAN '26 certificate of merit awarded to Hariank Juneja for first position in War of Bands at Birla Institute of Management Technology, February 2026.",
     caption: "Certificate of Merit · BIMTECH",
   },
-  {
-    src: "/creative/band-group.jpg",
-    alt: "Hariank playing electric guitar on stage alongside the rest of the band.",
-    caption: "Moksh",
-  },
 ];
+
+/** Bottom-right cell. */
+export const creativeGroup: SiteImage = {
+  src: "/creative/band-group.jpg",
+  alt: "Hariank playing electric guitar on stage alongside the rest of the band.",
+  position: "center 62%",
+};
 
 /** Sits between the photographs and the cards, in display italic. */
 export const creativeQuote =

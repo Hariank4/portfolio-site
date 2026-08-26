@@ -1,8 +1,15 @@
 import { Container } from "@/components/ui/container";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { RevealOnScroll } from "@/components/ui/reveal";
+import { Photo } from "@/components/ui/photo";
 import { PhotoCarousel } from "@/components/ui/photo-carousel";
-import { creativeItems, creativeImages, creativeQuote } from "@/content/creative";
+import {
+  creativeItems,
+  creativeAnchor,
+  creativeAward,
+  creativeGroup,
+  creativeQuote,
+} from "@/content/creative";
 
 export function Creative() {
   return (
@@ -15,13 +22,35 @@ export function Creative() {
           description="Music and film aren't a side note here — they run on the same instinct for clarity and pacing as the engineering work."
         />
 
-        <RevealOnScroll className="mt-14">
-          <PhotoCarousel
-            images={creativeImages}
-            ariaLabel="Music and performance photographs"
-            className="aspect-[3/2]"
-          />
-        </RevealOnScroll>
+        {/* Anchor portrait left, two stacked cells right. The right column
+            stretches to the anchor's height so the two columns end level;
+            fixed aspect ratios on both sides would leave them ragged. */}
+        <div className="mt-14 grid grid-cols-1 gap-6 md:grid-cols-[1.15fr_1fr]">
+          <RevealOnScroll>
+            <Photo image={creativeAnchor} className="aspect-[4/5]" />
+          </RevealOnScroll>
+
+          <div className="grid grid-cols-1 gap-6 md:h-full md:grid-rows-2">
+            <RevealOnScroll delay={0.08} className="md:min-h-0">
+              {/* No dots: the cell has no spare row for them, and with two
+                  slides the arrows are affordance enough. */}
+              <PhotoCarousel
+                images={creativeAward}
+                ariaLabel="War of Bands win and certificate"
+                className="aspect-[16/10] md:aspect-auto md:h-full"
+                frameClassName="h-full"
+                showDots={false}
+              />
+            </RevealOnScroll>
+
+            <RevealOnScroll delay={0.16} className="md:min-h-0">
+              <Photo
+                image={creativeGroup}
+                className="aspect-[16/10] md:aspect-auto md:h-full"
+              />
+            </RevealOnScroll>
+          </div>
+        </div>
 
         <RevealOnScroll delay={0.1}>
           {/* Accent, matching the hero's italic second line — the one place

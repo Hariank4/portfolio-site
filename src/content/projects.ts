@@ -45,6 +45,10 @@ export type Project = {
       of hardware is usually portrait, and forcing it into a landscape crop
       means losing the parts of the frame that show what the shot is of. */
   heroClassName?: string;
+  /** Wrapper around a carousel lead — width and centring. Kept off
+      `heroClassName` because that lands on the frame, and the dots sit
+      outside it. */
+  heroWrapperClassName?: string;
   /** A cycling carousel of related shots (team photos) sharing one cell
       beside the gallery's second image. */
   carousel?: SiteImage[];
@@ -374,7 +378,8 @@ export const projects: Project[] = [
     // All four sources are cropped to 3:4 in public/, so every slide fills the
     // frame edge to edge — no matting. The reading shot's crop keeps the
     // laptop, the breadboard and the lit sensor; only empty desk is lost.
-    heroClassName: "aspect-[3/4] mx-auto w-full max-w-lg",
+    heroClassName: "aspect-[3/4]",
+    heroWrapperClassName: "mx-auto max-w-lg",
     carousel: [
       {
         src: "/work/band-reading.jpg",
