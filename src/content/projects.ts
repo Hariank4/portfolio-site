@@ -371,8 +371,11 @@ export const projects: Project[] = [
           "Those sensors are cost-prohibitive and not sold as off-the-shelf consumer hardware, so the signal was scoped out. The shipped prototype fuses HR, SpO2, and ECG instead — all from sensors (MAX30100, AD8232) that are actually accessible to a solo, self-funded build.",
       },
     ],
+    // All four share the reading photo's 9:16 shape (see heroClassName) — the
+    // other three are recropped from their originals for it, not stretched
+    // from the old landscape crops, which would have chopped the boards oddly.
     heroClassName: "aspect-[9/16] max-w-md mx-auto md:max-w-sm",
-    gallery: [
+    carousel: [
       {
         src: "/work/band-reading.jpg",
         alt: "The full setup taking a live reading — laptop showing serial output, ESP32 on the breadboard, and the pulse sensor lit against a fingertip.",

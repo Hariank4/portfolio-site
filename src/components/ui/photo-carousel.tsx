@@ -15,34 +15,42 @@ const SIZES = "(min-width: 768px) 33vw, 100vw";
  * touch, which was the exact bug the fan version had before it grew a click
  * handler.
  *
- * `caption`, if given, is a fixed label for the whole set — top-left, so it
- * never collides with the dots — rather than a per-image `Photo` caption that
- * would disappear on every slide but the one it was set on.
+ * `caption`, if given, is a fixed label for the whole set — e.g. "The team"
+ * when every slide is the same group of people. Leave it unset and each
+ * slide falls back to its own `image.caption` instead, for a set where the
+ * photos are of different things. Either way it's rendered top-left, never
+ * bottom, so it can't collide with the dots — a per-slide `Photo` caption
+ * rendered at the bottom (its default position) would.
  */
 export function PhotoCarousel({
   images,
   caption,
+  ariaLabel = "Photographs",
   className,
+  priority,
 }: {
   images: SiteImage[];
   caption?: string;
+  ariaLabel?: string;
   className?: string;
+  priority?: boolean;
 }) {
   const [index, setIndex] = useState(0);
   const go = (delta: number) => setIndex((i) => (i + delta + images.length) % images.length);
+  const label = caption ?? images[index].caption;
 
   return (
     <div
       className={cn("group relative aspect-[3/2] w-full", className)}
       role="region"
       aria-roledescription="carousel"
-      aria-label="Team photographs"
+      aria-label={ariaLabel}
     >
-      <Photo image={images[index]} sizes={SIZES} className="h-full" />
+      <Photo image={images[index]} sizes={SIZES} className="h-full" priority={priority} />
 
-      {caption && (
+      {label && (
         <span className="eyebrow pointer-events-none absolute left-3 top-3 z-10 rounded-full bg-black/55 px-2.5 py-1 text-[11px] text-white backdrop-blur-sm">
-          {caption}
+          {label}
         </span>
       )}
 

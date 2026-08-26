@@ -77,7 +77,9 @@ type Project = {
                                        // landscape crop (fits a screenshot); a portrait phone
                                        // photo needs its own aspect + max-width instead, or the
                                        // landscape crop cuts off whatever the shot is meant to show.
-  carousel?: SiteImage[];               // a cycling carousel sharing that row, any length
+  carousel?: SiteImage[];               // cycling arrows+dots carousel. With a gallery present, it
+                                       // shares the detail row; without one, it IS the lead —
+                                       // rendered at heroClassName's shape instead.
   resultsStatus: string;               // §07, or §08 when priorArt is present — always shown
   accent: "coral" | "cyan" | "violet" | "amber";
     // maps to a CSS var in project-cover.tsx's accentVar and the OG image's accentHex —

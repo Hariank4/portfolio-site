@@ -53,11 +53,14 @@ export default async function ProjectPage({
 
   const nextProject = projects[(projects.indexOf(project) + 1) % projects.length];
 
+  const hasGallery = project.gallery && project.gallery.length > 0;
+
   // Everything in the gallery below the lead image, plus the carousel if
   // there is one, shares a single row — 2 across, or 3 when there are that
-  // many.
+  // many. Only meaningful when there's a separate gallery lead; a project
+  // with just a carousel (no gallery) renders that carousel alone, below.
   const details = project.gallery?.slice(1) ?? [];
-  const detailCount = details.length + (project.carousel ? 1 : 0);
+  const detailCount = details.length + (hasGallery && project.carousel ? 1 : 0);
 
   return (
     <article>
@@ -65,11 +68,11 @@ export default async function ProjectPage({
 
       {/* Deliberately unnumbered — it sits above "01 Problem" as a lead image.
           Folding it into the numbering would renumber every section below it,
-          for the one project that happens to have photographs. */}
-      {project.gallery && project.gallery.length > 0 && (
+          for the projects that happen to have photographs. */}
+      {hasGallery && (
         <Container className="pt-12 md:pt-16">
           <Photo
-            image={project.gallery[0]}
+            image={project.gallery![0]}
             className={project.heroClassName ?? "aspect-[16/10] md:aspect-[2/1]"}
             sizes="(min-width: 768px) 1120px, 100vw"
             priority
@@ -92,10 +95,29 @@ export default async function ProjectPage({
                 />
               ))}
               {project.carousel && (
-                <PhotoCarousel images={project.carousel} caption="The team" className="self-start" />
+                <PhotoCarousel
+                  images={project.carousel}
+                  caption="The team"
+                  ariaLabel="Team photographs"
+                  className="self-start"
+                />
               )}
             </div>
           )}
+        </Container>
+      )}
+
+      {/* A project with a carousel but no separate gallery lead — the
+          carousel itself is the lead, at heroClassName's shape rather than
+          the shared 2-up/3-up detail-row size. */}
+      {!hasGallery && project.carousel && (
+        <Container className="pt-12 md:pt-16">
+          <PhotoCarousel
+            images={project.carousel}
+            ariaLabel="Prototype photographs"
+            className={project.heroClassName ?? "aspect-[16/10] md:aspect-[2/1]"}
+            priority
+          />
         </Container>
       )}
 
