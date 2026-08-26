@@ -135,7 +135,6 @@ export const projects: Project[] = [
       {
         src: "/work/cs-team-0.jpg",
         alt: "The Cyber सारथी team working at a table between two Cyber सारथी / MeraPath step-and-repeat banners.",
-        caption: "The team",
       },
       {
         src: "/work/cs-team-1.jpg",

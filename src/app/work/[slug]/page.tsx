@@ -92,7 +92,7 @@ export default async function ProjectPage({
                 />
               ))}
               {project.carousel && (
-                <PhotoCarousel images={project.carousel} className="self-start" />
+                <PhotoCarousel images={project.carousel} caption="The team" className="self-start" />
               )}
             </div>
           )}

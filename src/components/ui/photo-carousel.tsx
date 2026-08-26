@@ -14,12 +14,18 @@ const SIZES = "(min-width: 768px) 33vw, 100vw";
  * unconditionally (no hover-gating): a hover-only affordance is invisible on
  * touch, which was the exact bug the fan version had before it grew a click
  * handler.
+ *
+ * `caption`, if given, is a fixed label for the whole set — top-left, so it
+ * never collides with the dots — rather than a per-image `Photo` caption that
+ * would disappear on every slide but the one it was set on.
  */
 export function PhotoCarousel({
   images,
+  caption,
   className,
 }: {
   images: SiteImage[];
+  caption?: string;
   className?: string;
 }) {
   const [index, setIndex] = useState(0);
@@ -33,6 +39,12 @@ export function PhotoCarousel({
       aria-label="Team photographs"
     >
       <Photo image={images[index]} sizes={SIZES} className="h-full" />
+
+      {caption && (
+        <span className="eyebrow pointer-events-none absolute left-3 top-3 z-10 rounded-full bg-black/55 px-2.5 py-1 text-[11px] text-white backdrop-blur-sm">
+          {caption}
+        </span>
+      )}
 
       {images.length > 1 && (
         <>
