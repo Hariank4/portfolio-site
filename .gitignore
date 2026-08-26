@@ -17,3 +17,7 @@ npm-debug.log*
 yarn-error.log*
 
 .vercel
+
+# Local agent/editor tooling — launch.json just points Claude Code at
+# `npm run dev` on port 3000, which anyone can configure themselves.
+.claude/
