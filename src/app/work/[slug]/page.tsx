@@ -70,7 +70,7 @@ export default async function ProjectPage({
         <Container className="pt-12 md:pt-16">
           <Photo
             image={project.gallery[0]}
-            className="aspect-[16/10] md:aspect-[2/1]"
+            className={project.heroClassName ?? "aspect-[16/10] md:aspect-[2/1]"}
             sizes="(min-width: 768px) 1120px, 100vw"
             priority
           />

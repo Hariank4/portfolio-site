@@ -73,6 +73,10 @@ type Project = {
   priorArt?: PriorArt[];               // case-study §07 — optional; omitted entirely if absent
   gallery?: SiteImage[];               // photographs, above §01 and deliberately unnumbered.
                                        // [0] is the wide lead; the rest go 2-up beneath it.
+  heroClassName?: string;              // className override for gallery[0] — default is a
+                                       // landscape crop (fits a screenshot); a portrait phone
+                                       // photo needs its own aspect + max-width instead, or the
+                                       // landscape crop cuts off whatever the shot is meant to show.
   carousel?: SiteImage[];               // a cycling carousel sharing that row, any length
   resultsStatus: string;               // §07, or §08 when priorArt is present — always shown
   accent: "coral" | "cyan" | "violet" | "amber";

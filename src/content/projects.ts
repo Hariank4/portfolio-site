@@ -40,6 +40,11 @@ export type Project = {
       a project with nothing to show is better off with no gallery than with a
       stock-looking filler shot. */
   gallery?: SiteImage[];
+  /** className override for gallery[0] — aspect ratio, and a max-width if the
+      shot is portrait. Default (landscape) suits a screenshot; a phone photo
+      of hardware is usually portrait, and forcing it into a landscape crop
+      means losing the parts of the frame that show what the shot is of. */
+  heroClassName?: string;
   /** A cycling carousel of related shots (team photos) sharing one cell
       beside the gallery's second image. */
   carousel?: SiteImage[];
@@ -366,10 +371,11 @@ export const projects: Project[] = [
           "Those sensors are cost-prohibitive and not sold as off-the-shelf consumer hardware, so the signal was scoped out. The shipped prototype fuses HR, SpO2, and ECG instead — all from sensors (MAX30100, AD8232) that are actually accessible to a solo, self-funded build.",
       },
     ],
+    heroClassName: "aspect-[9/16] max-w-md mx-auto md:max-w-sm",
     gallery: [
       {
         src: "/work/band-reading.jpg",
-        alt: "The prototype taking a live reading — the pulse sensor lit against a fingertip, wired to an ESP32 on a breadboard.",
+        alt: "The full setup taking a live reading — laptop showing serial output, ESP32 on the breadboard, and the pulse sensor lit against a fingertip.",
         caption: "Taking a reading",
       },
       {
