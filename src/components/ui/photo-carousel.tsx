@@ -28,12 +28,14 @@ export function PhotoCarousel({
   ariaLabel = "Photographs",
   className,
   priority,
+  fit = "cover",
 }: {
   images: SiteImage[];
   caption?: string;
   ariaLabel?: string;
   className?: string;
   priority?: boolean;
+  fit?: "cover" | "contain";
 }) {
   const [index, setIndex] = useState(0);
   const go = (delta: number) => setIndex((i) => (i + delta + images.length) % images.length);
@@ -46,7 +48,17 @@ export function PhotoCarousel({
       aria-roledescription="carousel"
       aria-label={ariaLabel}
     >
-      <Photo image={images[index]} sizes={SIZES} className="h-full" priority={priority} />
+      {/* showCaption off: this component renders the label itself, top-left.
+          Photo's own figcaption sits bottom-centre, where it would both
+          duplicate that label and collide with the dots. */}
+      <Photo
+        image={images[index]}
+        sizes={SIZES}
+        className="h-full"
+        priority={priority}
+        fit={fit}
+        showCaption={false}
+      />
 
       {label && (
         <span className="eyebrow pointer-events-none absolute left-3 top-3 z-10 rounded-full bg-black/55 px-2.5 py-1 text-[11px] text-white backdrop-blur-sm">

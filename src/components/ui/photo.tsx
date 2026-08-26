@@ -20,11 +20,19 @@ export function Photo({
   className,
   sizes = "(min-width: 768px) 45vw, 100vw",
   priority,
+  fit = "cover",
+  showCaption = true,
 }: {
   image: SiteImage;
   className?: string;
   sizes?: string;
   priority?: boolean;
+  /** "contain" shows the whole frame, matted against the figure's background,
+      for a set whose images don't all share the box's aspect ratio. */
+  fit?: "cover" | "contain";
+  /** Off when the parent renders the caption itself — PhotoCarousel does, and
+      two captions would otherwise stack up on the same image. */
+  showCaption?: boolean;
 }) {
   return (
     <figure
@@ -36,10 +44,10 @@ export function Photo({
         fill
         sizes={sizes}
         priority={priority}
-        className="object-cover"
+        className={fit === "contain" ? "object-contain" : "object-cover"}
         style={image.position ? { objectPosition: image.position } : undefined}
       />
-      {image.caption && (
+      {showCaption && image.caption && (
         <figcaption className="eyebrow absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent px-4 pb-3 pt-10 text-[11px] text-white">
           {image.caption}
         </figcaption>
