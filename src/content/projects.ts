@@ -337,14 +337,14 @@ export const projects: Project[] = [
       "A solo wearable prototype that fuses heart-rate, SpO2, and ECG signals into a rule-based layer aimed at surfacing early cardiac-risk warnings in real time.",
     timeframe: "Self-initiated, during college orientation",
     role: "Solo project, built out of personal curiosity",
-    tech: ["ESP32 (Bluetooth, USB-C)", "MAX30102 (heart-rate / SpO2)", "AD8232 (single-lead ECG)", "Companion mobile app"],
+    tech: ["ESP32 (Bluetooth, USB-C)", "MAX30100 (heart-rate / SpO2)", "AD8232 (single-lead ECG)", "Companion mobile app"],
     links: [],
     problem:
       "Early warning signs of a cardiac event are often present in physiological signals minutes before the event itself — but usually only a clinical setting is equipped to catch them.",
     whyItMatters:
       "A low-cost wearable that fuses multiple signals rather than relying on one sensor gives a more honest picture of what's actually happening physiologically, and was a chance to work across the full hardware-to-software stack alone.",
     whatIBuilt: [
-      "An ESP32-based wearable combining a MAX30102 heart-rate/SpO2 sensor and an AD8232 single-lead ECG sensor to capture real-time cardiac signals.",
+      "An ESP32-based wearable combining a MAX30100 heart-rate/SpO2 sensor and an AD8232 single-lead ECG sensor to capture real-time cardiac signals.",
       "A rule-based detection layer that fuses heart rate, blood oxygen, and ECG waveform data, aimed at surfacing early-warning indicators 15–30 minutes ahead of a potential cardiac event.",
       "Real-time alerts through an onboard buzzer and a companion Bluetooth-connected mobile app.",
     ],
@@ -360,7 +360,7 @@ export const projects: Project[] = [
         challenge:
           "Research surfaced sweat lactate as a physiological stress signal relevant to cardiac risk, detectable via an enzymatic lactate sensor.",
         resolution:
-          "Those sensors are cost-prohibitive and not sold as off-the-shelf consumer hardware, so the signal was scoped out. The shipped prototype fuses HR, SpO2, and ECG instead — all from sensors (MAX30102, AD8232) that are actually accessible to a solo, self-funded build.",
+          "Those sensors are cost-prohibitive and not sold as off-the-shelf consumer hardware, so the signal was scoped out. The shipped prototype fuses HR, SpO2, and ECG instead — all from sensors (MAX30100, AD8232) that are actually accessible to a solo, self-funded build.",
       },
     ],
     gallery: [
@@ -371,11 +371,8 @@ export const projects: Project[] = [
       },
       {
         src: "/work/band-pulse-sensor.jpg",
-        // Caption avoids the part number on purpose: the board silkscreen in
-        // this photo reads MAX30100, while `tech` above says MAX30102. Resolve
-        // that before naming it here.
-        alt: "The pulse and blood-oxygen sensor breakout board held between two fingers.",
-        caption: "Pulse / SpO₂ sensor",
+        alt: "The MAX30100 pulse and blood-oxygen sensor breakout board held between two fingers.",
+        caption: "MAX30100 pulse / SpO₂",
       },
       {
         src: "/work/band-ecg.jpg",
