@@ -73,8 +73,7 @@ type Project = {
   priorArt?: PriorArt[];               // case-study §07 — optional; omitted entirely if absent
   gallery?: SiteImage[];               // photographs, above §01 and deliberately unnumbered.
                                        // [0] is the wide lead; the rest go 2-up beneath it.
-  stack?: SiteImage[];                 // a fanned pile sharing that 2-up row — max 3 (a 4th
-                                       // is ignored; photo-stack.tsx only defines 3 layers)
+  carousel?: SiteImage[];               // a cycling carousel sharing that row, any length
   resultsStatus: string;               // §07, or §08 when priorArt is present — always shown
   accent: "coral" | "cyan" | "violet" | "amber";
     // maps to a CSS var in project-cover.tsx's accentVar and the OG image's accentHex —

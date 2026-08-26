@@ -40,9 +40,9 @@ export type Project = {
       a project with nothing to show is better off with no gallery than with a
       stock-looking filler shot. */
   gallery?: SiteImage[];
-  /** A fanned pile of related shots (team photos) sharing one cell beside the
-      gallery's second image — three photographs in one photograph's footprint. */
-  stack?: SiteImage[];
+  /** A cycling carousel of related shots (team photos) sharing one cell
+      beside the gallery's second image. */
+  carousel?: SiteImage[];
   resultsStatus: string;
   accent: "coral" | "cyan" | "violet" | "amber";
 };
@@ -131,11 +131,15 @@ export const projects: Project[] = [
         caption: "MeraPath Education Ltd.",
       },
     ],
-    stack: [
+    carousel: [
+      {
+        src: "/work/cs-team-0.jpg",
+        alt: "The Cyber सारथी team working at a table between two Cyber सारथी / MeraPath step-and-repeat banners.",
+        caption: "The team",
+      },
       {
         src: "/work/cs-team-1.jpg",
         alt: "The Cyber सारथी team in front of a screen showing the project's branding at the MeraPath office.",
-        caption: "The team",
       },
       {
         src: "/work/cs-team-2.jpg",

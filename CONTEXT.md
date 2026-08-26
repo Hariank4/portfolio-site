@@ -162,7 +162,9 @@ A bare `tsc --noEmit` false-positives on `LayoutProps` before `.next/` exists.
   band (Moksh) and the War of Bands win at VIHAAN '26, BIMTECH, both confirmed by the user and
   the certificate scan.
 - **Cyber सारथी gallery** — unnumbered lead strip above §01, including the platform itself on
-  screen. This was the highest-value image available and it is now in.
+  screen. This was the highest-value image available and it is now in. The team photos beside it
+  are a `PhotoCarousel` (arrows + dots) — it replaced an earlier hover-fanned pile, which was
+  undiscoverable on touch.
 - **MeraPath** — a supporting shot on the Experience timeline row.
 
 **Planned, not started:**

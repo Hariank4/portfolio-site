@@ -11,7 +11,7 @@ import { cn } from "@/lib/cn";
 import { Container } from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
 import { Photo } from "@/components/ui/photo";
-import { PhotoStack } from "@/components/ui/photo-stack";
+import { PhotoCarousel } from "@/components/ui/photo-carousel";
 
 export function generateStaticParams() {
   return projects.map((p) => ({ slug: p.slug }));
@@ -53,10 +53,11 @@ export default async function ProjectPage({
 
   const nextProject = projects[(projects.indexOf(project) + 1) % projects.length];
 
-  // Everything in the gallery below the lead image, plus the stack if there is
-  // one, shares a single row — 2 across, or 3 when there are that many.
+  // Everything in the gallery below the lead image, plus the carousel if
+  // there is one, shares a single row — 2 across, or 3 when there are that
+  // many.
   const details = project.gallery?.slice(1) ?? [];
-  const detailCount = details.length + (project.stack ? 1 : 0);
+  const detailCount = details.length + (project.carousel ? 1 : 0);
 
   return (
     <article>
@@ -90,8 +91,8 @@ export default async function ProjectPage({
                   sizes="(min-width: 768px) 33vw, 100vw"
                 />
               ))}
-              {project.stack && (
-                <PhotoStack images={project.stack} className="self-start" />
+              {project.carousel && (
+                <PhotoCarousel images={project.carousel} className="self-start" />
               )}
             </div>
           )}
