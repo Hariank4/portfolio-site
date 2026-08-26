@@ -363,6 +363,31 @@ export const projects: Project[] = [
           "Those sensors are cost-prohibitive and not sold as off-the-shelf consumer hardware, so the signal was scoped out. The shipped prototype fuses HR, SpO2, and ECG instead — all from sensors (MAX30102, AD8232) that are actually accessible to a solo, self-funded build.",
       },
     ],
+    gallery: [
+      {
+        src: "/work/band-reading.jpg",
+        alt: "The prototype taking a live reading — the pulse sensor lit against a fingertip, wired to an ESP32 on a breadboard.",
+        caption: "Taking a reading",
+      },
+      {
+        src: "/work/band-pulse-sensor.jpg",
+        // Caption avoids the part number on purpose: the board silkscreen in
+        // this photo reads MAX30100, while `tech` above says MAX30102. Resolve
+        // that before naming it here.
+        alt: "The pulse and blood-oxygen sensor breakout board held between two fingers.",
+        caption: "Pulse / SpO₂ sensor",
+      },
+      {
+        src: "/work/band-ecg.jpg",
+        alt: "The AD8232 single-lead ECG breakout wired on the breadboard, with electrode leads plugged into its jack.",
+        caption: "AD8232 single-lead ECG",
+      },
+      {
+        src: "/work/band-esp32.jpg",
+        alt: "The ESP32 development board seated on the breadboard, powered over USB-C.",
+        caption: "ESP32",
+      },
+    ],
     resultsStatus: "Working solo prototype.",
     accent: "amber",
   },

@@ -7,6 +7,7 @@ import { CaseStudyHero } from "@/components/case-study/case-study-hero";
 import { CaseStudySection } from "@/components/case-study/case-study-section";
 import { ArchitectureDiagram } from "@/components/case-study/architecture-diagram";
 import { SpecList, ChallengeList } from "@/components/case-study/spec-list";
+import { cn } from "@/lib/cn";
 import { Container } from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
 import { Photo } from "@/components/ui/photo";
@@ -52,6 +53,11 @@ export default async function ProjectPage({
 
   const nextProject = projects[(projects.indexOf(project) + 1) % projects.length];
 
+  // Everything in the gallery below the lead image, plus the stack if there is
+  // one, shares a single row — 2 across, or 3 when there are that many.
+  const details = project.gallery?.slice(1) ?? [];
+  const detailCount = details.length + (project.stack ? 1 : 0);
+
   return (
     <article>
       <CaseStudyHero project={project} />
@@ -69,10 +75,20 @@ export default async function ProjectPage({
           />
           {/* items-start: Photo is h-full, so a stretched row — which is what
               expanding the stack creates — would blow the sibling up with it. */}
-          {(project.gallery.length > 1 || project.stack) && (
-            <div className="mt-4 grid grid-cols-1 items-start gap-4 sm:grid-cols-2">
-              {project.gallery.slice(1).map((image) => (
-                <Photo key={image.src} image={image} className="aspect-[3/2]" />
+          {detailCount > 0 && (
+            <div
+              className={cn(
+                "mt-4 grid grid-cols-1 items-start gap-4",
+                detailCount >= 3 ? "sm:grid-cols-3" : "sm:grid-cols-2",
+              )}
+            >
+              {details.map((image) => (
+                <Photo
+                  key={image.src}
+                  image={image}
+                  className="aspect-[3/2]"
+                  sizes="(min-width: 768px) 33vw, 100vw"
+                />
               ))}
               {project.stack && (
                 <PhotoStack images={project.stack} className="self-start" />
