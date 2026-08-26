@@ -17,7 +17,7 @@ export function OpenSource() {
     <section id="code" aria-label="Code & open source" className="border-b border-border py-24 md:py-32">
       <Container>
         <SectionHeading
-          index="06"
+          index="07"
           eyebrow="Code"
           title="Most of what I build lives in the open."
         />

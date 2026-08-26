@@ -20,7 +20,7 @@ export function Contact() {
   return (
     <section id="contact" aria-label="Contact" className="py-24 md:py-36">
       <Container>
-        <Eyebrow index="07">Contact</Eyebrow>
+        <Eyebrow index="08">Contact</Eyebrow>
 
         <RevealOnScroll>
           <h2 className="mt-6 max-w-4xl font-display text-[clamp(2.4rem,6vw,4.6rem)] leading-[1.06] text-balance">

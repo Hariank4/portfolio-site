@@ -148,6 +148,34 @@ const creativeQuote: string          // one line, display italic, between photos
 const creativeItems: CreativeItem[]  // rendered as a 3-col grid (md:grid-cols-3 in creative.tsx)
 ```
 
+## `credentials.ts`
+
+```ts
+type GoogleBadge = { src: string; alt: string; title: string };
+type CertificateImage = { src: string; alt: string; title: string; date: string };
+
+const googleProfileUrl: string        // the one real, public verify link for the Google group —
+                                         // individual badges have no separate verify URL
+const googleBadges: GoogleBadge[]     // 5 badge PNGs from the Skills profile, rendered via Photo
+const infosysCertificates: CertificateImage[]           // 4 real certificate scans (2 rendered
+                                                            // from the source PDF via `sips`)
+const innovationAmbassadorCertificates: CertificateImage[] // 3 real certificate scans (Foundation,
+                                                               // Advanced, Re-skilling — PDF pages
+                                                               // rendered via `sips`, alpha-cropped
+                                                               // to content with Pillow since the
+                                                               // page render leaves transparent
+                                                               // margin around the cert). MoE's
+                                                               // Innovation Cell & AICTE — despite
+                                                               // the name, not an Infosys credential
+```
+
+Rendered by `sections/credentials.tsx` as `06 CREDENTIALS`, between Creative and Code (which is `07`
+— Contact is `08`). All three groups render as an image grid via the shared `CertificateGrid`
+component wrapping `Photo`, captioned `title · date`; only Google carries an extra link out to
+`googleProfileUrl`, since individual badges have no separate verify URL. Deliberately excludes the
+LOR, offer letter, and internship certificate (they prove employment, not certification) and the
+VIHAAN '26 certificate (lives in `creative.ts` instead, next to the win it evidences).
+
 ## `images.ts`
 
 ```ts

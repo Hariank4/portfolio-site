@@ -166,16 +166,25 @@ A bare `tsc --noEmit` false-positives on `LayoutProps` before `.next/` exists.
   are a `PhotoCarousel` (arrows + dots) — it replaced an earlier hover-fanned pile, which was
   undiscoverable on touch.
 - **MeraPath** — a supporting shot on the Experience timeline row.
+- **Credentials section** (Aug 2026) — new `06 CREDENTIALS` section between Creative and Code,
+  `src/content/credentials.ts` + `sections/credentials.tsx`. Five Google Skills badges (real PNGs
+  from the Skills profile) linking out to the one real verify URL — the public profile itself, not
+  a per-badge link, since Credly-style individual verify links don't exist here. Infosys Springboard
+  is 4 real certificate scans (2 PDF course-completion certs rendered to PNG via `sips`, 2 already
+  images) in a 2-up grid, captioned with course + date. Innovation Ambassador — MoE's Innovation
+  Cell & AICTE, *not* Infosys despite the similar-sounding name — is likewise 3 real certificate
+  scans (Foundation, Advanced, Re-skilling; the last dated the same day this was built), PDF pages
+  rendered via `sips` then alpha-cropped to just the certificate with Pillow (the raw page render
+  has a transparent margin around it, and PIL's naive RGB `.convert()` turns that transparency
+  black rather than white — crop on the alpha channel's bbox, not an RGB diff against white).
+  Subsequent sections renumbered: Code is now `07`, Contact `08`. The LOR, offer letter and
+  internship certificate stay off this section — they
+  prove *employment*, not certification. VIHAAN '26 stays in Creative, since it evidences a
+  competitive win.
 
 **Planned, not started:**
 - **Portrait in the About section.** `profile.avatar` is typed and null; nothing renders it. The
   left column under "01 ABOUT" is the intended home.
-- **Credentials section.** The résumé's Training entries (Infosys Springboard, Google Skills) are
-  on the CV but nowhere on the site — plus the VIHAAN '26 merit certificate, which is the only
-  one of these that evidences a competitive win rather than course completion. Note that the LOR,
-  joining letter and internship certificate prove *employment*, not certification — grouping them
-  under "Certifications" would overstate what they are. Planned interaction differs per issuer:
-  Google credentials reveal badges on click, Infosys ones reveal details.
 
 **Checks before publishing any further imagery** — each of these caught something real:
 1. If a MeraPath image shows identifiable participants or colleagues, that is MeraPath's call.
