@@ -78,6 +78,7 @@ Do not "fix" these without reading the reasoning.
 | Two logo marks, swapped in CSS | The mark is a raster with its background baked in, so it cannot inherit `--bg`. Both variants are mounted and `data-theme` toggles which one displays — same approach as `ThemeToggle`'s two icons. |
 | `* { border-color: var(--color-border) }` is unlayered | It therefore overrides every Tailwind `border-*` utility. `border-border-strong` does not actually work anywhere. Pre-existing; noted, not fixed. |
 | `bolt/` excluded from tsconfig and eslint | An untracked scratch Vite prototype living inside the repo. It failed the main typecheck until excluded. |
+| `--radius-md` / `--radius-lg` look unused | Grepping the `.tsx` for them returns nothing, so a dead-code pass will flag them. They are **live**: Tailwind v4 maps the `--radius-*` namespace onto the `rounded-*` utilities, so `rounded-lg` compiles to `border-radius: var(--radius-lg)` and deleting the token silently changes every rounded corner on the site. Verify a token against the *compiled* CSS in `.next/static/chunks/*.css`, not the source. `--accent-soft` and `--success` were checked the same way, were genuinely unreferenced, and have been removed. |
 
 ---
 
@@ -116,12 +117,27 @@ before lunch, and replies took 15–32s versus ~1s here.
 
 ## 6. Performance notes
 
-Fonts are ~98% of the bytes on a cold load — there are no images and the JS bundle is small.
-That makes font decisions the highest-leverage performance work here.
+Fonts dominate a cold load — the JS bundle is small and photographs are all below the fold behind
+`next/image`. That makes font decisions the highest-leverage work here, with one exception noted
+below.
 
 Measured wins: display-font `wght` build (−184KB), dropping GeistMono entirely and using sans for
 label type (−70KB), keeping content files out of the client bundle (−40KB), `LazyMotion` (−8KB
-gzipped), and `template.tsx` back to a Server Component using a CSS animation.
+gzipped), `template.tsx` back to a Server Component using a CSS animation, and recompressing the
+two app icons (−173KB, below).
+
+**`src/app/icon.png` is a real cold-load cost, and it is easy to miss.** Next renders it as
+`<link rel="icon" sizes="512x512">`, so every page load fetches it — it is not a decorative asset.
+It shipped as a near-uncompressed 512×512 PNG at 230KB, *larger than the entire Geist font*, which
+is why the "fonts are ~98% of the bytes" claim that used to sit here was wrong. Both it and
+`apple-icon.png` are now 256-colour palette PNGs at the same 512×512 (230→141KB and 216→132KB,
+RMSE 0.26/255 — imperceptible on a monochrome signature mark). `apple-icon.png` is deploy weight
+only; iOS fetches it just on "add to home screen". If either is ever re-exported, re-quantise it —
+`Image.open(p).convert("RGB").quantize(colors=256).save(p, optimize=True)` via Pillow.
+
+There is deliberately **no** `dynamic()`, `Suspense`, `React.lazy`, or artificial loading state
+anywhere in the app. At this size direct imports are faster; do not add code-splitting without a
+measurement showing it helps.
 
 `npm run build` is the real check — it is the only command that runs the full TypeScript check.
 A bare `tsc --noEmit` false-positives on `LayoutProps` before `.next/` exists.

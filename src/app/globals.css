@@ -16,11 +16,9 @@
   --fg-faint: #736c63;
   --accent: #5b3fd6;
   --accent-fg: #ffffff;
-  --accent-soft: #ece7fb;
   --accent-cyan: #0e7490;
   --accent-violet: #5b3fd6;
   --accent-amber: #9a6700;
-  --success: #2d7a5f;
 
   --radius-md: 12px;
   --radius-lg: 20px;
@@ -41,11 +39,9 @@
   --fg-faint: #877f76;
   --accent: #b5a0f5;
   --accent-fg: #14120f;
-  --accent-soft: rgba(181, 160, 245, 0.15);
   --accent-cyan: #67d2e8;
   --accent-violet: #b5a0f5;
   --accent-amber: #e0a955;
-  --success: #5fc79a;
 
   color-scheme: dark;
 }
@@ -61,11 +57,9 @@
   --color-fg-faint: var(--fg-faint);
   --color-accent: var(--accent);
   --color-accent-fg: var(--accent-fg);
-  --color-accent-soft: var(--accent-soft);
   --color-accent-cyan: var(--accent-cyan);
   --color-accent-violet: var(--accent-violet);
   --color-accent-amber: var(--accent-amber);
-  --color-success: var(--success);
 
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   --font-display: "Cormorant Garamond Variable", ui-serif, Georgia, serif;
@@ -156,10 +150,6 @@ body {
 
 .route-enter {
   animation: route-enter 0.45s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.text-balance {
-  text-wrap: balance;
 }
 
 /* Hero cursor grid — see components/ui/cursor-grid.tsx. */
