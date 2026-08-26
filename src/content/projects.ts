@@ -371,11 +371,10 @@ export const projects: Project[] = [
           "Those sensors are cost-prohibitive and not sold as off-the-shelf consumer hardware, so the signal was scoped out. The shipped prototype fuses HR, SpO2, and ECG instead — all from sensors (MAX30100, AD8232) that are actually accessible to a solo, self-funded build.",
       },
     ],
-    // Every slide is the full uncropped frame, matted rather than cropped (the
-    // carousel renders these with object-contain). The box is 3:4 because
-    // three of the four photos are natively 3:4 and so fill it exactly; the
-    // 9:16 reading shot mattes at the sides but stays whole, laptop included.
-    heroClassName: "aspect-[3/4] mx-auto w-full max-w-xl",
+    // All four sources are cropped to 3:4 in public/, so every slide fills the
+    // frame edge to edge — no matting. The reading shot's crop keeps the
+    // laptop, the breadboard and the lit sensor; only empty desk is lost.
+    heroClassName: "aspect-[3/4] mx-auto w-full max-w-lg",
     carousel: [
       {
         src: "/work/band-reading.jpg",

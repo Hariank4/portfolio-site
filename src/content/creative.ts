@@ -9,24 +9,29 @@ export type CreativeItem = {
   description: string;
 };
 
-// `guitar-solo` is the anchor (portrait 4:5); the other two stack beside it.
+// Carousel slides, in order. Every file is pre-cropped to 3:2 so each one
+// fills the frame edge to edge — including the certificate, whose paper margin
+// absorbs the trim without touching any of its text.
 export const creativeImages: SiteImage[] = [
   {
     src: "/creative/guitar-solo.jpg",
     alt: "Hariank singing and playing acoustic guitar on stage at a university event.",
     caption: "Manav Rachna University",
-    position: "center 30%",
   },
   {
     src: "/creative/band-bimtech.jpg",
     alt: "Moksh on stage at BIMTECH, in front of the band's name in lights.",
     caption: "1st · War of Bands, VIHAAN '26",
-    position: "center 70%",
+  },
+  {
+    src: "/creative/vihaan-certificate.jpg",
+    alt: "VIHAAN '26 certificate of merit awarded to Hariank Juneja for first position in War of Bands at Birla Institute of Management Technology, February 2026.",
+    caption: "Certificate of Merit · BIMTECH",
   },
   {
     src: "/creative/band-group.jpg",
     alt: "Hariank playing electric guitar on stage alongside the rest of the band.",
-    position: "center 62%",
+    caption: "Moksh",
   },
 ];
 

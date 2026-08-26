@@ -112,15 +112,10 @@ export default async function ProjectPage({
           the shared 2-up/3-up detail-row size. */}
       {!hasGallery && project.carousel && (
         <Container className="pt-12 md:pt-16">
-          {/* contain, not cover: these are phone photos of hardware at mixed
-              aspect ratios, and cropping them to a shared box is what kept
-              cutting the subject out of frame. Matting costs some space and
-              loses nothing. */}
           <PhotoCarousel
             images={project.carousel}
             ariaLabel="Prototype photographs"
             className={project.heroClassName ?? "aspect-[16/10] md:aspect-[2/1]"}
-            fit="contain"
             priority
           />
         </Container>

@@ -77,9 +77,11 @@ type Project = {
                                        // landscape crop (fits a screenshot); a portrait phone
                                        // photo needs its own aspect + max-width instead, or the
                                        // landscape crop cuts off whatever the shot is meant to show.
-  carousel?: SiteImage[];               // cycling arrows+dots carousel. With a gallery present, it
-                                       // shares the detail row; without one, it IS the lead —
-                                       // rendered at heroClassName's shape instead.
+  carousel?: SiteImage[];               // auto-advancing slide carousel. With a gallery present it
+                                       // shares the detail row (3:2 default); without one it IS
+                                       // the lead, at heroClassName's shape. Crop every source to
+                                       // the frame's ratio — slides are object-cover, so a
+                                       // mismatched source gets silently cropped.
   resultsStatus: string;               // §07, or §08 when priorArt is present — always shown
   accent: "coral" | "cyan" | "violet" | "amber";
     // maps to a CSS var in project-cover.tsx's accentVar and the OG image's accentHex —
@@ -137,8 +139,8 @@ const skillGroups: SkillGroup[]   // rendered as N columns (lg:grid-cols-4 in sk
 ```ts
 type CreativeItem = { title: string; description: string };
 
-const creativeImages: SiteImage[]    // exactly 3 — [0] is the 4:5 anchor, [1] and [2] stack
-                                        // beside it. A 4th would render off-layout.
+const creativeImages: SiteImage[]    // slides of the section's carousel, any length. Crop each
+                                        // source to 3:2 so it fills the frame edge to edge.
 const creativeQuote: string          // one line, display italic, between photos and cards
 const creativeItems: CreativeItem[]  // rendered as a 3-col grid (md:grid-cols-3 in creative.tsx)
 ```
