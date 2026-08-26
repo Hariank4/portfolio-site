@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { GeistSans } from "geist/font/sans";
-// Weight-only builds, not `full` — see architecture.md §5. Self-hosted rather
+// Weight-only builds, not `full` — see docs/architecture.md §5. Self-hosted rather
 // than next/font/google because fonts.googleapis.com was unreachable during
 // the original build.
 import "@fontsource-variable/cormorant-garamond/wght.css";

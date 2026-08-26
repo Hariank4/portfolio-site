@@ -13,8 +13,12 @@ expressed in copy.
 
 ## Doc map
 
+All of these live in `docs/`, alongside this file. `README.md`, `CLAUDE.md` and `AGENTS.md` stay
+at the repo root by convention.
+
 | Doc | Read this for |
 |---|---|
+| `CONTEXT.md` | **Start here.** Current state: what exists, what was decided and why, what is still open |
 | `project.md` (this file) | What the site is, who it's for, content rules |
 | `architecture.md` | How the code is put together — stack, routing, rendering, theming, motion |
 | `schema.md` | The exact shape of every content file under `src/content/` |
