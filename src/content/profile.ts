@@ -44,7 +44,7 @@ export const profile = {
     },
     {
       label: "LinkedIn",
-      href: "https://www.linkedin.com/in/hariank-juneja-7b78b6274",
+      href: "https://www.linkedin.com/in/hariank-juneja",
       handle: "in/hariank-juneja",
     },
     {
