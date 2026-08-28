@@ -25,7 +25,7 @@ than asserted. The AI Medical Scribe concept is included because the user descri
 their own exploratory concept — it is labeled "Concept / Exploration," not a shipped product, and
 carries no fabricated metrics.
 
-Verified links: `mailto:hariankjuneja4@gmail.com`, `https://www.linkedin.com/in/hariank-juneja`,
+Verified links: `mailto:hariankjuneja4@gmail.com`, `https://www.linkedin.com/in/hariankjuneja`,
 `https://github.com/Hariank4`, `https://cybersarthi.in`. No Instagram handle was found anywhere in the
 source material, so it is omitted rather than guessed.
 
